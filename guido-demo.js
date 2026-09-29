@@ -30,18 +30,33 @@
   voiceButton.textContent = '🔊 Ascolta Guido';
   hud.querySelector('.hud-controls').prepend(voiceButton);
 
-  const narration = 'Benvenuti al municipio di Oleggio Castello. Sono Guido, il vostro cantastorie. Guardate il cortile davanti a voi. La didascalia di una fotografia del 1973 racconta che questo edificio era una casa colonica. Tocca lo schermo per mettermi dove vuoi, poi osserva che cosa è cambiato.';
+  const narration = 'Benvenuti al municipio di Oleggio Castello. Io sono Guido, il cantastorie. Fermatevi un momento e guardate oltre ciò che vedete. La fotografia con la didascalia del millenovecentosettantatré mostra questo luogo quando era una casa colonica. Oggi è il municipio. Osservate gli archi e le finestre. Che cosa è cambiato? E che cosa, invece, è rimasto?';
+  const recordedVoice = new Audio('guido-narration.mp3');
+  recordedVoice.preload = 'auto';
+  let recordedVoiceFailed = false;
   let fallbackStream = null;
   let generation = 0;
   let opening = false;
 
   function stopVoice() {
+    recordedVoice.pause();
+    recordedVoice.currentTime = 0;
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     anchor.classList.remove('speaking');
     voiceButton.textContent = '🔊 Ascolta Guido';
   }
 
-  function speakGuido() {
+  recordedVoice.onplay = () => {
+    anchor.classList.add('speaking');
+    voiceButton.textContent = '■ Ferma Guido';
+  };
+  recordedVoice.onended = () => {
+    anchor.classList.remove('speaking');
+    voiceButton.textContent = '🔊 Riascolta Guido';
+  };
+  recordedVoice.onerror = () => { recordedVoiceFailed = true; };
+
+  function speakWithBrowser() {
     if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
       voiceButton.textContent = 'Voce non disponibile';
       voiceButton.disabled = true;
@@ -67,6 +82,22 @@
       voiceButton.textContent = '🔊 Riascolta Guido';
     };
     window.speechSynthesis.speak(speech);
+  }
+
+  function speakGuido() {
+    if (!recordedVoice.paused || ('speechSynthesis' in window && window.speechSynthesis.speaking)) {
+      stopVoice();
+      return;
+    }
+    if (recordedVoiceFailed) {
+      speakWithBrowser();
+      return;
+    }
+    recordedVoice.currentTime = 0;
+    recordedVoice.play().catch(() => {
+      recordedVoiceFailed = true;
+      speakWithBrowser();
+    });
   }
 
   voiceButton.addEventListener('click', speakGuido);
