@@ -42,6 +42,12 @@
   window.addEventListener('deviceorientation', event => {
     if (Number.isFinite(event.alpha) && Number.isFinite(event.beta)) {
       orientation = {yaw: event.alpha, pitch: event.beta, time: performance.now()};
+      if (target?.visible && yawCalibrated && hud.classList.contains('active') && canvas.height) {
+        const estimate = projectedPoint(canvas.height);
+        if (estimate && Math.hypot(estimate.x - target.x, estimate.y - target.y) < 42) {
+          place(target.x * .55 + estimate.x * .45, target.y * .55 + estimate.y * .45, canvas.height);
+        }
+      }
     }
   }, {passive: true});
   document.getElementById('startAr').addEventListener('click', () => {
@@ -265,7 +271,11 @@
     }
 
     if (target.visible) {
-      const match = findMatch(frame, target.x, target.y, 18);
+      const predicted = projectedPoint(frame.height);
+      const sensorIsNear = predicted && Math.hypot(predicted.x - target.x, predicted.y - target.y) < 42;
+      const searchX = sensorIsNear ? target.x * .4 + predicted.x * .6 : target.x;
+      const searchY = sensorIsNear ? target.y * .4 + predicted.y * .6 : target.y;
+      const match = findMatch(frame, searchX, searchY, sensorIsNear ? 22 : 18);
       if (match.score <= 30) {
         const pose = freshOrientation();
         if (pose && target.lastPose && pose.time - target.lastPose.time < 1000) {
