@@ -11,7 +11,12 @@
   pin.id = 'guidePin';
   pin.hidden = true;
   hud.appendChild(pin);
-  hint.textContent = 'Tocca un bordo di finestra, una sedia o una cornice';
+  const direction = document.createElement('div');
+  direction.id = 'guideDirection';
+  direction.hidden = true;
+  direction.innerHTML = '<span class="arrow">↶</span><span>Guido è fuori campo. Torna verso il punto scelto.</span>';
+  hud.appendChild(direction);
+  hint.textContent = 'Tocca un bordo: Guido tornerà lì anche dopo essere uscito di scena';
   bubble.textContent = 'Tocca un dettaglio della sala: mi fermerò lì.';
 
   const canvas = document.createElement('canvas');
@@ -23,7 +28,27 @@
   }
   let target = null;
   let lastCapture = 0;
+  let lastSearch = 0;
   let moveTimer = 0;
+  let orientation = null;
+  let yawSign = 1;
+  let pitchSign = 1;
+  let yawCalibrated = false;
+  let pitchCalibrated = false;
+  const horizontalField = 50;
+  const verticalField = 75;
+
+  const angularDifference = (a, b) => ((a - b + 540) % 360) - 180;
+  window.addEventListener('deviceorientation', event => {
+    if (Number.isFinite(event.alpha) && Number.isFinite(event.beta)) {
+      orientation = {yaw: event.alpha, pitch: event.beta, time: performance.now()};
+    }
+  }, {passive: true});
+  document.getElementById('startAr').addEventListener('click', () => {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().catch(() => {});
+    }
+  }, {capture: true});
 
   function activeVideo() {
     const fallback = document.getElementById('fallbackCamera');
@@ -100,6 +125,53 @@
     guido.style.top = `${Math.max(27, Math.min(63, py - 7))}%`;
   }
 
+  function freshOrientation() {
+    return orientation && performance.now() - orientation.time < 2500 ? orientation : null;
+  }
+
+  function rememberDirection(height) {
+    const pose = freshOrientation();
+    if (!pose || !target) return;
+    target.worldYaw = (pose.yaw + yawSign * (target.x / width - .5) * horizontalField + 360) % 360;
+    target.worldPitch = pose.pitch + pitchSign * (target.y / height - .5) * verticalField;
+    target.lastPose = pose;
+  }
+
+  function projectedPoint(height) {
+    const pose = freshOrientation();
+    if (!pose || !target || target.worldYaw == null || !yawCalibrated) return null;
+    return {
+      x: width * (.5 + yawSign * angularDifference(target.worldYaw, pose.yaw) / horizontalField),
+      y: pitchCalibrated
+        ? height * (.5 + pitchSign * angularDifference(target.worldPitch, pose.pitch) / verticalField)
+        : target.y,
+    };
+  }
+
+  function showOutside(point, height) {
+    let arrow = '↶';
+    if (point?.x < 0) arrow = '←';
+    else if (point?.x > width) arrow = '→';
+    else if (point?.y < 0) arrow = '↑';
+    else if (point?.y > height) arrow = '↓';
+    direction.querySelector('.arrow').textContent = arrow;
+    direction.hidden = false;
+    pin.hidden = true;
+    guido.classList.add('offscreen');
+    guido.classList.remove('seeking');
+    status.textContent = 'Guido resta legato al punto scelto. Ruota verso la freccia per ritrovarlo.';
+  }
+
+  function showEstimated(point, height) {
+    direction.hidden = true;
+    guido.classList.remove('offscreen');
+    guido.classList.add('seeking');
+    pin.hidden = !document.getElementById('arGuido').checked;
+    place(point.x, point.y, height);
+    bubble.textContent = 'Sono qui: sto ritrovando il dettaglio.';
+    status.textContent = 'Guido è tornato nella posizione stimata; cerco il dettaglio nella ripresa.';
+  }
+
   function moveAnimation() {
     guido.classList.add('moving');
     clearTimeout(moveTimer);
@@ -124,40 +196,61 @@
     target = {
       x: selected.x, y: selected.y, video: frame.video,
       model: makeTemplate(frame, selected.x, selected.y), misses: 0,
+      visible: true, worldYaw: null, worldPitch: null, lastPose: null,
     };
+    rememberDirection(frame.height);
+    direction.hidden = true;
     pin.hidden = false;
     pin.classList.remove('lost');
+    guido.classList.remove('offscreen', 'seeking');
     place(target.x, target.y, frame.height);
     moveAnimation();
     bubble.textContent = 'Eccomi: seguo il punto che hai scelto.';
     status.textContent = 'Guido agganciato al dettaglio scelto · muovi lentamente il telefono.';
   });
 
-  function findMatch(frame) {
-    const centerX = Math.round(target.x), centerY = Math.round(target.y);
-    let bestScore = Infinity, bestX = centerX, bestY = centerY;
-    for (let dy = -18; dy <= 18; dy++) {
-      const cy = centerY + dy;
+  function scoreAt(frame, cx, cy) {
+    let brightnessShift = 0;
+    for (let i = 0; i < sampleOffsets.length; i++) {
+      const [ox, oy] = sampleOffsets[i];
+      brightnessShift += frame.gray[(cy + oy) * width + cx + ox] - target.model[i];
+    }
+    brightnessShift /= sampleOffsets.length;
+    let difference = 0;
+    for (let i = 0; i < sampleOffsets.length; i++) {
+      const [ox, oy] = sampleOffsets[i];
+      difference += Math.abs(frame.gray[(cy + oy) * width + cx + ox] - target.model[i] - brightnessShift);
+    }
+    return difference / sampleOffsets.length;
+  }
+
+  function findMatch(frame, centerX, centerY, radius, stride = 1) {
+    let best = {x: centerX, y: centerY, score: Infinity};
+    for (let cy = Math.round(centerY - radius); cy <= centerY + radius; cy += stride) {
       if (cy < 11 || cy >= frame.height - 11) continue;
-      for (let dx = -18; dx <= 18; dx++) {
-        const cx = centerX + dx;
+      for (let cx = Math.round(centerX - radius); cx <= centerX + radius; cx += stride) {
         if (cx < 11 || cx >= width - 11) continue;
-        let brightnessShift = 0;
-        for (let i = 0; i < sampleOffsets.length; i++) {
-          const [ox, oy] = sampleOffsets[i];
-          brightnessShift += frame.gray[(cy + oy) * width + cx + ox] - target.model[i];
-        }
-        brightnessShift /= sampleOffsets.length;
-        let difference = 0;
-        for (let i = 0; i < sampleOffsets.length; i++) {
-          const [ox, oy] = sampleOffsets[i];
-          difference += Math.abs(frame.gray[(cy + oy) * width + cx + ox] - target.model[i] - brightnessShift);
-        }
-        const score = difference / sampleOffsets.length;
-        if (score < bestScore) { bestScore = score; bestX = cx; bestY = cy; }
+        const score = scoreAt(frame, cx, cy);
+        if (score < best.score) best = {x: cx, y: cy, score};
       }
     }
-    return {x: bestX, y: bestY, score: bestScore};
+    return best;
+  }
+
+  function reacquire(frame, estimate) {
+    let coarse;
+    if (estimate) {
+      coarse = findMatch(frame, estimate.x, estimate.y, 48, 3);
+    } else {
+      coarse = {x: width / 2, y: frame.height / 2, score: Infinity};
+      for (let y = 12; y < frame.height - 11; y += 4) {
+        for (let x = 12; x < width - 11; x += 4) {
+          const score = scoreAt(frame, x, y);
+          if (score < coarse.score) coarse = {x, y, score};
+        }
+      }
+    }
+    return findMatch(frame, coarse.x, coarse.y, 6, 1);
   }
 
   function follow(now) {
@@ -167,40 +260,87 @@
     const frame = capture();
     if (!frame) return;
     if (frame.video !== target.video) {
-      target = null;
-      pin.classList.add('lost');
-      status.textContent = 'La ripresa è cambiata: tocca di nuovo il punto da seguire.';
-      return;
+      target.video = frame.video;
+      target.visible = false;
     }
-    const match = findMatch(frame);
-    if (match.score > 30) {
-      if (++target.misses >= 4) {
-        target = null;
-        pin.classList.add('lost');
-        bubble.textContent = 'Ho perso quel punto. Tocca un altro bordo.';
-        status.textContent = 'Punto perso: tocca di nuovo una cornice o una sedia.';
+
+    if (target.visible) {
+      const match = findMatch(frame, target.x, target.y, 18);
+      if (match.score <= 30) {
+        const pose = freshOrientation();
+        if (pose && target.lastPose && pose.time - target.lastPose.time < 1000) {
+          const yawChange = angularDifference(pose.yaw, target.lastPose.yaw);
+          const pitchChange = angularDifference(pose.pitch, target.lastPose.pitch);
+          const xChange = match.x - target.x;
+          const yChange = match.y - target.y;
+          if (Math.abs(yawChange) > 1.5 && Math.abs(xChange) > 2) {
+            yawSign = xChange * yawChange < 0 ? 1 : -1;
+            yawCalibrated = true;
+          }
+          if (Math.abs(pitchChange) > 1.5 && Math.abs(yChange) > 2) {
+            pitchSign = yChange * pitchChange < 0 ? 1 : -1;
+            pitchCalibrated = true;
+          }
+        }
+        target.misses = 0;
+        const distance = Math.hypot(match.x - target.x, match.y - target.y);
+        target.x = target.x * .35 + match.x * .65;
+        target.y = target.y * .35 + match.y * .65;
+        place(target.x, target.y, frame.height);
+        rememberDirection(frame.height);
+        direction.hidden = true;
+        guido.classList.remove('offscreen', 'seeking');
+        pin.hidden = !document.getElementById('arGuido').checked;
+        if (distance > 2.5) moveAnimation();
+        if (match.score < 18) {
+          const cx = Math.round(target.x), cy = Math.round(target.y);
+          for (let i = 0; i < sampleOffsets.length; i++) {
+            const [ox, oy] = sampleOffsets[i];
+            target.model[i] = target.model[i] * .985 + frame.gray[(cy + oy) * width + cx + ox] * .015;
+          }
+        }
+        return;
       }
-      return;
+      if (++target.misses < 3) return;
+      target.visible = false;
     }
-    target.misses = 0;
-    const distance = Math.hypot(match.x - target.x, match.y - target.y);
-    target.x = target.x * .35 + match.x * .65;
-    target.y = target.y * .35 + match.y * .65;
-    place(target.x, target.y, frame.height);
-    if (distance > 2.5) moveAnimation();
-    if (match.score < 18) {
-      const cx = Math.round(target.x), cy = Math.round(target.y);
-      for (let i = 0; i < sampleOffsets.length; i++) {
-        const [ox, oy] = sampleOffsets[i];
-        target.model[i] = target.model[i] * .985 + frame.gray[(cy + oy) * width + cx + ox] * .015;
-      }
+
+    const estimate = projectedPoint(frame.height);
+    const outside = estimate && (estimate.x < 0 || estimate.x >= width || estimate.y < 0 || estimate.y >= frame.height);
+    if (outside || !estimate) showOutside(estimate, frame.height);
+    else showEstimated(estimate, frame.height);
+
+    if (now - lastSearch < 420) return;
+    lastSearch = now;
+    const globalSearch = outside || !estimate;
+    const match = reacquire(frame, globalSearch ? null : estimate);
+    if (match.score < (globalSearch ? 17 : 24)) {
+      target.visible = true;
+      target.misses = 0;
+      target.x = match.x;
+      target.y = match.y;
+      rememberDirection(frame.height);
+      direction.hidden = true;
+      pin.hidden = !document.getElementById('arGuido').checked;
+      pin.classList.remove('lost');
+      guido.classList.remove('offscreen', 'seeking');
+      place(target.x, target.y, frame.height);
+      moveAnimation();
+      bubble.textContent = 'Eccomi di nuovo, nello stesso punto.';
+      status.textContent = 'Guido ha ritrovato il dettaglio scelto.';
     }
   }
 
   document.getElementById('closeAr').addEventListener('click', () => {
     target = null;
+    yawCalibrated = false;
+    pitchCalibrated = false;
+    yawSign = 1;
+    pitchSign = 1;
     pin.hidden = true;
-    guido.classList.remove('moving');
+    pin.classList.remove('lost');
+    direction.hidden = true;
+    guido.classList.remove('moving', 'offscreen', 'seeking');
     guido.style.left = '69%';
     guido.style.top = '43%';
     bubble.textContent = 'Tocca un dettaglio della sala: mi fermerò lì.';
