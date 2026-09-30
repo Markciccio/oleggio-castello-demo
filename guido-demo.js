@@ -115,7 +115,7 @@
     hud.classList.add('active');
     document.body.classList.add('ar-active');
     anchor.hidden = !byId('arGuido').checked;
-    status.textContent = 'Guido è qui. Tocca la ripresa per spostarlo.';
+    status.textContent = 'Apro la fotocamera e scelgo un dettaglio vicino al centro…';
   }
 
   function hideTrackedGuido() {
@@ -154,11 +154,11 @@
     fallbackVideo.classList.add('active');
     document.body.classList.add('fallback-active');
     await fallbackVideo.play().catch(() => {});
-    status.textContent = 'Guido è nella ripresa · effetto dimostrativo. Tocca per spostarlo.';
+    status.textContent = 'Cerco un dettaglio vicino al centro per fissare Guido…';
     pageStatus.textContent = 'Fotocamera avviata in modalità demo.';
   }
 
-  async function startDemo() {
+  async function startDemo(mode = 'room') {
     if (opening) return;
     if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) {
       pageStatus.textContent = 'La fotocamera richiede un indirizzo HTTPS.';
@@ -170,22 +170,23 @@
     // Starting speech within the tap gesture helps mobile browsers allow playback.
     speakGuido();
     try {
-      await startMindAR();
+      if (mode === 'facade') {
+        try { await startMindAR(); }
+        catch (_) { await stopMindAR(); await startBasicCamera(); }
+      } else {
+        await startBasicCamera();
+      }
       if (myGeneration !== generation) {
+        stopBasicCamera();
         await stopMindAR();
         started = false;
+        return;
       }
+      hud.dispatchEvent(new CustomEvent('guido-camera-ready', {detail: {mode}}));
     } catch (_) {
-      await stopMindAR();
-      if (myGeneration !== generation) return;
-      try {
-        await startBasicCamera();
-        if (myGeneration !== generation) stopBasicCamera();
-      } catch (_) {
-        if (myGeneration === generation) {
-          closeDemo();
-          pageStatus.textContent = 'Non riesco ad aprire la fotocamera: controlla il permesso e riprova.';
-        }
+      if (myGeneration === generation) {
+        closeDemo();
+        pageStatus.textContent = 'Non riesco ad aprire la fotocamera: controlla il permesso e riprova.';
       }
     } finally {
       opening = false;
@@ -211,7 +212,8 @@
     opening = false;
   }
 
-  byId('startAr').onclick = startDemo;
+  byId('startAr').onclick = () => startDemo('room');
+  byId('startFacadeAr').onclick = () => startDemo('facade');
   byId('closeAr').onclick = closeDemo;
   byId('arGuido').addEventListener('input', () => { anchor.hidden = !byId('arGuido').checked; hideTrackedGuido(); });
   ['arOpacity', 'arScale', 'arX', 'arY'].forEach(id => byId(id).addEventListener('input', hideTrackedGuido));

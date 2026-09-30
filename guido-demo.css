@@ -22,6 +22,7 @@
 #guideAnchor .guideBubble{position:absolute;left:50%;bottom:calc(100% - 8px);transform:translateX(-50%);width:190px;max-width:54vw;padding:10px 12px;border:1px solid #fffbdf8c;border-radius:15px;background:#17291fe6;color:#fff9e9;text-align:center;font:700 11px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 8px 22px #0007}
 #guideVoice{border:1px solid #f5e6b781;background:#eddca6;color:#19352c;border-radius:11px;padding:10px 11px;font:800 12px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
 #guideVoice:disabled{opacity:.55;cursor:default}
+#guideRecenter{border:1px solid #f5e6b781;background:#f4eedc;color:#19352c;border-radius:11px;padding:10px 11px;font:800 12px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
 .fallback-active .hud-controls label:not(:last-of-type){display:none}
 @keyframes guideArrives{from{opacity:0;transform:translate(-50%,-42%) scale(.72)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes guideFloats{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1.5deg)}}

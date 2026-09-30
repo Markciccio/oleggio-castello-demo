@@ -1,5 +1,5 @@
-// Demo room anchor: the visitor chooses a visible detail, then a small image patch
-// is followed between camera frames. It is not object recognition or a 3D world anchor.
+// Demo room anchor: choose a visual detail near the centre automatically, then
+// follow its image patch. This is neither object recognition nor a 3D anchor.
 (() => {
   const hud = document.getElementById('arHud');
   const surface = document.getElementById('guideTapSurface');
@@ -16,8 +16,13 @@
   direction.hidden = true;
   direction.innerHTML = '<span class="arrow">↶</span><span>Guido è fuori campo. Torna verso il punto scelto.</span>';
   hud.appendChild(direction);
-  hint.textContent = 'Tocca un bordo: Guido tornerà lì anche dopo essere uscito di scena';
-  bubble.textContent = 'Tocca un dettaglio della sala: mi fermerò lì.';
+  hint.textContent = 'Guido sceglie un dettaglio al centro · tocca per cambiarlo';
+  bubble.textContent = 'Cerco un punto nella sala…';
+  const recenter = document.createElement('button');
+  recenter.id = 'guideRecenter';
+  recenter.type = 'button';
+  recenter.textContent = '◎ Fissa di nuovo';
+  hud.querySelector('.hud-controls').appendChild(recenter);
 
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d', {willReadFrequently: true});
@@ -35,6 +40,8 @@
   let pitchSign = 1;
   let yawCalibrated = false;
   let pitchCalibrated = false;
+  let autoTimer = 0;
+  let autoAttempts = 0;
   const horizontalField = 50;
   const verticalField = 75;
 
@@ -50,11 +57,13 @@
       }
     }
   }, {passive: true});
-  document.getElementById('startAr').addEventListener('click', () => {
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().catch(() => {});
-    }
-  }, {capture: true});
+  for (const id of ['startAr', 'startFacadeAr']) {
+    document.getElementById(id).addEventListener('click', () => {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().catch(() => {});
+      }
+    }, {capture: true});
+  }
 
   function activeVideo() {
     const fallback = document.getElementById('fallbackCamera');
@@ -113,6 +122,23 @@
         if (cx < 12 || cy < 12 || cx >= width - 12 || cy >= frame.height - 12) continue;
         const contrast = patchContrast(frame, cx, cy);
         if (contrast > best.contrast) best = {x: cx, y: cy, contrast};
+      }
+    }
+    return best;
+  }
+
+  function chooseCenterFeature(frame) {
+    const middleX = width / 2, middleY = frame.height / 2;
+    let best = null;
+    for (let y = Math.round(frame.height * .33); y <= frame.height * .67; y += 4) {
+      for (let x = Math.round(width * .31); x <= width * .69; x += 4) {
+        if (x < 12 || x >= width - 12 || y < 12 || y >= frame.height - 12) continue;
+        const contrast = patchContrast(frame, x, y);
+        const gX = Math.abs(frame.gray[y * width + x + 5] - frame.gray[y * width + x - 5]);
+        const gY = Math.abs(frame.gray[(y + 5) * width + x] - frame.gray[(y - 5) * width + x]);
+        const distance = Math.hypot((x - middleX) / width, (y - middleY) / frame.height);
+        const score = contrast + Math.min(gX, gY) * .17 - distance * 32;
+        if (!best || score > best.score) best = {x, y, contrast, score};
       }
     }
     return best;
@@ -184,21 +210,7 @@
     moveTimer = setTimeout(() => guido.classList.remove('moving'), 500);
   }
 
-  surface.addEventListener('click', event => {
-    const frame = capture();
-    if (!frame) {
-      status.textContent = 'Attendi la ripresa, poi tocca un dettaglio della sala.';
-      return;
-    }
-    const selected = chooseFeature(
-      frame,
-      Math.round(event.clientX / innerWidth * width),
-      Math.round(event.clientY / innerHeight * frame.height)
-    );
-    if (selected.contrast < 9) {
-      status.textContent = 'Scegli un bordo ben visibile, per esempio la cornice di un quadro.';
-      return;
-    }
+  function lockAt(frame, selected, automatic) {
     target = {
       x: selected.x, y: selected.y, video: frame.video,
       model: makeTemplate(frame, selected.x, selected.y), misses: 0,
@@ -211,8 +223,57 @@
     guido.classList.remove('offscreen', 'seeking');
     place(target.x, target.y, frame.height);
     moveAnimation();
-    bubble.textContent = 'Eccomi: seguo il punto che hai scelto.';
-    status.textContent = 'Guido agganciato al dettaglio scelto · muovi lentamente il telefono.';
+    bubble.textContent = automatic ? 'Eccomi! Resto su questo punto.' : 'Eccomi: seguo il punto che hai scelto.';
+    status.textContent = selected.contrast < 9
+      ? 'Pochi dettagli visibili: Guido è posizionato al centro. Inquadra un bordo per migliorare l’aggancio.'
+      : automatic
+        ? 'Guido fissato automaticamente vicino al centro · muovi lentamente il telefono.'
+        : 'Guido fissato al dettaglio scelto · muovi lentamente il telefono.';
+  }
+
+  function lockCenter() {
+    const frame = capture();
+    if (!frame) return false;
+    const selected = chooseCenterFeature(frame);
+    if (!selected) return false;
+    lockAt(frame, selected, true);
+    return true;
+  }
+
+  function scheduleAutoLock() {
+    clearTimeout(autoTimer);
+    autoAttempts = 0;
+    const attempt = () => {
+      if (!hud.classList.contains('active') || target) return;
+      if (lockCenter()) return;
+      if (++autoAttempts < 24) autoTimer = setTimeout(attempt, 150);
+      else status.textContent = 'Ripresa non pronta. Tocca “Fissa di nuovo” per riprovare.';
+    };
+    attempt();
+  }
+
+  hud.addEventListener('guido-camera-ready', scheduleAutoLock);
+  recenter.addEventListener('click', () => {
+    target = null;
+    yawCalibrated = false;
+    pitchCalibrated = false;
+    if (!lockCenter()) scheduleAutoLock();
+  });
+  surface.addEventListener('click', event => {
+    clearTimeout(autoTimer);
+    const frame = capture();
+    if (!frame) {
+      status.textContent = 'Attendi la ripresa, poi tocca un dettaglio della sala.';
+      return;
+    }
+    const selected = chooseFeature(frame,
+      Math.round(event.clientX / innerWidth * width),
+      Math.round(event.clientY / innerHeight * frame.height));
+    if (selected.contrast < 9) {
+      status.textContent = 'Scegli un bordo ben visibile, per esempio la cornice di un quadro.';
+      return;
+    }
+    lockAt(frame, selected, false);
   });
 
   function scoreAt(frame, cx, cy) {
@@ -342,6 +403,7 @@
   }
 
   document.getElementById('closeAr').addEventListener('click', () => {
+    clearTimeout(autoTimer);
     target = null;
     yawCalibrated = false;
     pitchCalibrated = false;
@@ -353,7 +415,7 @@
     guido.classList.remove('moving', 'offscreen', 'seeking');
     guido.style.left = '69%';
     guido.style.top = '43%';
-    bubble.textContent = 'Tocca un dettaglio della sala: mi fermerò lì.';
+    bubble.textContent = 'Cerco un punto nella sala…';
   });
   document.getElementById('arGuido').addEventListener('input', event => {
     pin.hidden = !event.target.checked || !target;
