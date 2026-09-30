@@ -123,8 +123,8 @@
     const p=estimate();if(!p||!display)return;const dt=Math.min(40,Math.max(1,now-lastRender));lastRender=now;
     const d=Math.hypot(p.x-display.x,p.y-display.y);if(d>.13){const blend=1-Math.exp(-dt/((lastVisualMotion>.3||lostAt)?12:45));display.x+=(p.x-display.x)*blend;display.y+=(p.y-display.y)*blend;}
     guide.style.left=`${display.x/W*100}%`;guide.style.top=`${display.y/canvas.height*100}%`;
-    guide.style.transform=`translate(-50%,-91%) rotate(${sceneAngle*180/Math.PI}deg) scale(${Math.max(.5,Math.min(2,sceneScale))})`;
-    const halfWidth=Math.min(innerWidth*.35,180)*Math.max(.5,Math.min(2,sceneScale))/2/innerWidth*W;
+    guide.style.transform=`translate(-50%,-70%) rotate(${sceneAngle*180/Math.PI}deg) scale(${Math.max(.5,Math.min(2,sceneScale))})`;
+    const halfWidth=Math.min(innerWidth*.48,260)*Math.max(.5,Math.min(2,sceneScale))/2/innerWidth*W;
     const offscreen=display.x<-halfWidth||display.x>W+halfWidth||display.y<-canvas.height*.1||display.y>canvas.height*1.4;
     guide.hidden=offscreen;
     const confidentlyEstimated=lostAt&&worldRay&&freshPose();
@@ -147,7 +147,8 @@
     // Refresh reference while anchored and visible, preserving the current world point.
     if(now-lastRecovery>1500&&anchor.x>0&&anchor.x<W&&anchor.y>0&&anchor.y<canvas.height){reference=remember(frame,points);lastRecovery=now;}
   }
-  hud.addEventListener('guido-camera-ready',()=>{generation++;active=true;previous=null;points=[];anchor=null;display=null;reference=null;lostAt=0;lastFrame=0;lastRecovery=0;worldRay=null;focal=0;lastPose=null;filteredAngles=null;sceneScale=1;sceneAngle=0;lastVisualMotion=0;guide.hidden=true;});
+  hud.addEventListener('guido-camera-ready',()=>{generation++;active=false;previous=null;points=[];anchor=null;display=null;reference=null;lostAt=0;lastFrame=0;lastRecovery=0;worldRay=null;focal=0;lastPose=null;filteredAngles=null;sceneScale=1;sceneAngle=0;lastVisualMotion=0;guide.hidden=true;});
+  hud.addEventListener('guido-place',()=>{generation++;active=true;previous=null;points=[];anchor=null;display=null;reference=null;lostAt=0;worldRay=null;lastPose=null;sceneScale=1;sceneAngle=0;lastVisualMotion=0;guide.hidden=true;});
   hud.addEventListener('guido-close',()=>{generation++;active=false;anchor=null;previous=null;guide.hidden=true;window.guidoDebug=null;});
   requestAnimationFrame(tick);
 })();

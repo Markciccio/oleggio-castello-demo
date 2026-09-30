@@ -22,3 +22,9 @@ Limiti: piano illustrato e tracking visivo approssimato, senza ricostruzione 3D.
 Prova aggiuntiva: `node work/debug-sensor-noise.mjs sensor-corrected`. La correzione impedisce ai sensori di muovere una scena che il tracking visivo vede ferma. La rotazione con perdita e ritorno continua a passare.
 
 Risposta alle rotazioni: predizione sensori al 100%, filtro rapido durante il movimento e calibrazione della focale più veloce. Prova simulata con rotazione di 20 gradi: spostamento equivalente di Guido 19,76 gradi, errore finale al ritorno 0,07 pixel. Il rumore dei sensori su scena ferma resta a 0 pixel. Nessuna prova fisica su smartphone.
+
+## ghost-guido-1
+Tre sprite trasparenti a mezzo busto e tre bocche locali. Analizzatore WebAudio per apertura labbra; sintesi di emergenza con movimento dimostrativo. Test browser: tre varianti distinte, volume anima la bocca, pausa chiude bocca, uscita libera camera, nessun errore JS. Regressione rotazione simulata: massimo errore transitorio 8.12 px, esce e recupera. Nessuna prova su dispositivo fisico.
+
+## ghost-guido-1
+Tre sprite trasparenti a mezzo busto e tre bocche locali. Analizzatore WebAudio per apertura labbra; sintesi di emergenza con movimento dimostrativo. Test browser: tre varianti distinte, volume anima la bocca, pausa chiude bocca, uscita libera camera, nessun errore JS. Regressione rotazione simulata: massimo errore transitorio 8.12 px, esce e recupera. Nessuna prova su dispositivo fisico.

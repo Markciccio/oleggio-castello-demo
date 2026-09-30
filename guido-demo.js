@@ -4,20 +4,44 @@
   const video=$('fallbackCamera'),hud=$('arHud'),guide=$('guideAnchor');
   const voice=$('guideVoice'),button=$('startAr');
   const audio=new Audio('guido-narration.mp3');audio.preload='auto';
+  const place=$('placeGuido'),aim=$('aimPoint');
+  $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
+  place.onclick=()=>{stopVoice();unlocked=false;guide.hidden=true;voice.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
   let stream=null,opening=false,generation=0,unlocked=false,audioFailed=false;
-  const narration='Benvenuti a Oleggio Castello. Io sono Guido, il cantastorie. Fermatevi un momento e guardate oltre ciò che vedete. Ogni luogo custodisce una storia. Oggi vi accompagno a cercare ciò che è cambiato e ciò che è rimasto.';
-  function stopVoice(){audio.pause();audio.currentTime=0;window.speechSynthesis?.cancel();voice.textContent='🔊 Ascolta Guido';}
+  let story=window.GUIDO_STORIES[0],context,analyser,source,synthSpeaking=false,lastVariant=-1,frame=0;
+  const variants=['blue','amber','silver'];
+  function chooseAppearance(){
+    lastVariant=(lastVariant+1)%variants.length;
+    const variant=variants[lastVariant];story=window.GUIDO_STORIES[lastVariant];
+    guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=`guido-ghost-${variant}.png`;
+    guide.querySelector('.ghostMouth').src=`guido-mouth-${variant}.png`;
+    audio.src=`guido-story-${story.id}.mp3`;audioFailed=false;
+  }
+  function unlockAnimation(){
+    try{if(!context){context=new (window.AudioContext||window.webkitAudioContext)();source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=512;source.connect(analyser);analyser.connect(context.destination);}context.resume().catch(()=>{});}catch{}
+    if(frame)return;
+    const samples=new Uint8Array(512);
+    function animate(t){
+      let level=0;
+      if(!audio.paused&&!audio.muted&&analyser){analyser.getByteTimeDomainData(samples);let sum=0;for(const n of samples)sum+=((n-128)/128)**2;level=Math.min(1,Math.sqrt(sum/samples.length)*10);}
+      else if(synthSpeaking)level=.4+.4*Math.sin(t/85);
+      guide.style.setProperty('--mouth-open',level.toFixed(3));
+      guide.classList.toggle('speaking',(!audio.paused&&!audio.muted)||synthSpeaking);
+      frame=requestAnimationFrame(animate);
+    }frame=requestAnimationFrame(animate);
+  }
+  function stopVoice(){audio.pause();audio.currentTime=0;synthSpeaking=false;guide.style.setProperty('--mouth-open',0);window.speechSynthesis?.cancel();voice.textContent='🔊 Ascolta Guido';}
   function speak(){
-    if(audioFailed){if(!window.speechSynthesis)return;const utterance=new SpeechSynthesisUtterance(narration);utterance.lang='it-IT';utterance.rate=.9;utterance.onend=()=>voice.textContent='🔊 Riascolta Guido';window.speechSynthesis.speak(utterance);voice.textContent='■ Ferma Guido';return;}
-    audio.muted=false;audio.currentTime=0;audio.play().catch(()=>{audioFailed=true;speak();});
+    if(audioFailed){if(!window.speechSynthesis)return;const utterance=new SpeechSynthesisUtterance(story.text);utterance.lang='it-IT';utterance.rate=.9;synthSpeaking=true;utterance.onend=()=>{synthSpeaking=false;voice.textContent='🔊 Riascolta Guido';};utterance.onerror=()=>{synthSpeaking=false;};window.speechSynthesis.speak(utterance);voice.textContent='■ Ferma Guido';return;}
+    audio.muted=false;audio.currentTime=0;voice.textContent='■ Ferma Guido';audio.play().catch(()=>{audioFailed=true;speak();});
   }
   audio.onplay=()=>{if(!audio.muted)voice.textContent='■ Ferma Guido';};audio.onended=()=>voice.textContent='🔊 Riascolta Guido';
   voice.onclick=()=>{if(!audio.paused||window.speechSynthesis?.speaking)stopVoice();else speak();};
-  hud.addEventListener('guido-anchored',()=>{if(!unlocked){unlocked=true;speak();}});
+  hud.addEventListener('guido-anchored',()=>{if(!unlocked){unlocked=true;place.textContent='Sposta Guido';place.classList.add('placed');aim.hidden=true;voice.hidden=false;speak();}});
   function close(){generation++;opening=false;button.disabled=false;stopVoice();stream?.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;video.classList.remove('active');hud.classList.remove('active');document.body.classList.remove('ar-active');guide.hidden=true;hud.dispatchEvent(new Event('guido-close'));}
   $('closeAr').onclick=close;
   button.onclick=async()=>{
-    if(opening)return;opening=true;button.disabled=true;unlocked=false;const current=++generation;
+    if(opening)return;opening=true;button.disabled=true;unlocked=false;const current=++generation;chooseAppearance();unlockAnimation();
     // Unlock prerecorded audio in the initial gesture; start the story once Guido is anchored.
     audio.muted=true;audio.play().then(()=>{if(!unlocked){audio.pause();audio.currentTime=0;audio.muted=false;}}).catch(()=>{audio.muted=false;});
     if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().catch(()=>{});
@@ -29,7 +53,8 @@
       stream=acquired;video.srcObject=stream;await video.play();
       if(current!==generation)return;
       video.classList.add('active');hud.classList.add('active');document.body.classList.add('ar-active');
-      $('arStatus').textContent='Inquadra un oggetto: Guido sta arrivando…';
+      place.textContent='Blocca Guido qui';place.classList.remove('placed');aim.hidden=false;voice.hidden=true;
+      $('arStatus').textContent='Inquadra un dettaglio al centro e premi il pulsante.';
       hud.dispatchEvent(new CustomEvent('guido-camera-ready',{detail:{mode:'room'}}));
     }catch(error){if(current===generation){close();$('status').textContent='Consenti la fotocamera nelle impostazioni del browser e riprova.';}}
     finally{if(current===generation){opening=false;button.disabled=false;}}
