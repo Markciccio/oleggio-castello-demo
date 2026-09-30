@@ -1,15 +1,19 @@
-# Debug Guido · 30 settembre 2026
+# Debug della scena Guido · 30 settembre 2026
 
-Prove eseguite in Edge tramite Playwright con fotocamera simulata; nessuna prova su smartphone fisico.
+Prove riproducibili: `node work/debug-scene.mjs final`. Edge, 390×844, ripresa generata con Canvas e MediaStream; non è una prova su telefono fisico. Risultati: `work/debug-scene-final.json`. Screenshot: `work/guido-scene-camera.png`.
 
-| Scenario | Prima | Dopo |
-|---|---:|---:|
-| Ripresa ferma | 0 px spostamento | 0 px spostamento |
-| Movimento lento (errore massimo) | 4,74 px | 4,58 px |
-| Occlusione del riferimento (errore massimo su scena ferma) | 105,49 px | 0 px, Guido nascosto durante la perdita |
+| Scenario | Risultato |
+|---|---|
+| Scena ferma | 0 px di deriva |
+| Pan lento di 38 px | errore massimo 0,84 px |
+| Occlusione parziale del riferimento iniziale | 0 px di deriva |
+| Uscita e ritorno | 13 campioni fuori campo, rientro sul punto originario |
+| Rotazione con orientamento simulato | 29 campioni fuori campo; tracking visivo recuperato al ritorno |
+| Parete uniforme | riferimento rifiutato, Guido resta nascosto |
+| Voce | parte automaticamente dopo l'aggancio |
+| Chiusura e riapertura | flusso chiuso e nuova scena inizializzata |
+| Errori della pagina | nessuno |
 
-Il tracker accettava porzioni poco riconoscibili e cercava corrispondenze su tutto il fotogramma. Ora richiede contrasto sufficiente e tre conferme per riagganciare; senza stima spaziale limita la ricerca al punto precedente. Una parete uniforme viene rifiutata.
+Il tracker segue fino a 32 punti con optical flow Lucas-Kanade su tre risoluzioni e controllo avanti/indietro. La trasformazione della scena usa un consenso robusto. La posizione può muoversi oltre il viewport. L'orientamento a tre assi proietta una direzione di riferimento nella camera corrente, anche durante la perdita della ripresa. L'angolo di campo è stimato usando il movimento visivo.
 
-La modalità Guido AR con cartello usa direttamente la posa dell'immagine riconosciuta da MindAR, con Guido figlio dell'entità del riferimento. Nella ripresa simulata con prospettiva e posizione variabili: 29 cambi di posa su 30 campioni, personaggio AR visibile, sovrapposizione 2D nascosta, nessun errore della pagina. Screenshot: work/marker-ar-debug.png. Risultati grezzi: work/debug-anchor-before.json, work/debug-anchor-final.json e work/debug-marker-result.json.
-
-Il cartello deve rimanere visibile. Un riferimento d'immagine non ricostruisce la stanza né crea un'ancora permanente fuori campo.
+Limiti: piano illustrato e tracking visivo approssimato, senza ricostruzione 3D. Parallasse, superfici prive di dettagli e movimenti rapidi possono far perdere l'aggancio. Nel test con rotazione rapida compare un ritardo transitorio: la stima non è una misura precisa della posizione nel mondo. La prova nella sala su smartphone resta da fare.

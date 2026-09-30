@@ -1,23 +1,15 @@
-# Guido AR · Oleggio Castello
+# Incontra Guido
 
-DEMO GUIDO AR · OLEGGIO CASTELLO
+INCONTRA GUIDO · OLEGGIO CASTELLO
 
-Apri la demo: https://markciccio.github.io/oleggio-castello-demo/demo-ar-municipio.html?v=marker-ar-1
-Cartello: https://markciccio.github.io/oleggio-castello-demo/cartello-guido-ar.html
+Apri: https://markciccio.github.io/oleggio-castello-demo/?v=scene-flow-1
 
-Per presentare Guido nella sala:
-1. Stampa cartello-guido-ar.html a colori, senza ritagliare la fotografia. Puoi anche mostrarlo su un secondo schermo.
-2. Metti il cartello su un supporto fermo, illuminato e senza riflessi.
-3. Sul telefono premi «Guido AR · inquadra il cartello» e consenti la fotocamera.
-4. Inquadra la fotografia. Guido appare agganciato al riferimento: posizione, scala e prospettiva seguono il cartello.
-5. Mantieni il cartello visibile. Se esce dal campo, Guido scompare; riappare quando il riferimento viene riconosciuto.
+La home ha una sola azione: Incontra Guido. Il tocco apre direttamente la fotocamera. Consenti la fotocamera e, se richiesto, il movimento del telefono. Inquadra un oggetto con dettagli visibili: la demo sceglie un punto vicino al centro e Guido inizia il racconto automaticamente.
 
-Questa modalità usa il riconoscimento dell'immagine e la posa AR di MindAR. Il personaggio è un'illustrazione su piano 3D. Non è un'ancora spaziale permanente: non ricostruisce l'intera sala e non conserva una posizione nel mondo quando il cartello non è visibile.
+L'aggancio segue più dettagli dello sfondo con optical flow a più risoluzioni. Un consenso robusto stima traslazione, rotazione e scala della scena. Guido può uscire dall'inquadratura. L'orientamento alpha/beta/gamma viene convertito in assi della fotocamera e usato per prevedere il movimento e stimare la direzione quando la ripresa perde i dettagli. Tornando verso il punto iniziale, la ripresa corregge la stima. Le superfici uniformi richiedono di inquadrare un altro dettaglio.
 
-Il confronto AR della facciata del 1973 rimane disponibile separatamente. Le prospettive delle due foto differiscono. La didascalia della fotografia fornita indica il 1973; il racconto va adattato alle fonti storiche locali.
+Questa è una demo visiva basata su tracking dell'immagine e orientamento. Non riconosce semanticamente una sedia, non ricostruisce la stanza in 3D e non garantisce una posizione permanente durante spostamenti complessi del telefono. Se l'orientamento è negato o assente resta l'aggancio visivo. Le altre schermate e il cartello sono stati rimossi dal percorso della demo.
 
-La «Prova libera» segue un dettaglio della ripresa senza cartello: è un effetto dimostrativo. Rifiuta superfici uniformi e non cerca un nuovo punto in tutta l'immagine quando perde il riferimento. L'orientamento aiuta la ricerca, quando disponibile. Il racconto usa guido-narration.mp3 e può ripiegare sulla sintesi vocale del browser.
+Prove del 30 settembre 2026: Edge con fotocamera simulata. Camera ferma: 0 pixel di deriva. Movimento lento: errore massimo 0,84 pixel. Occlusione parziale: 0 pixel di deriva. Uscita e ritorno: verificati; provati anche rotazione con orientamento, voce automatica, chiusura dei flussi e riapertura. Nessun errore della pagina. La validazione in una sala con uno smartphone reale resta da fare.
 
-La tappa completa index.html include il racconto, confronto, enigma e chiave salvata localmente. Nessuna installazione necessaria. Per aggiungere tappe estendere STATIONS in index.html.
-
-Debug eseguito il 30 settembre 2026: prova nel browser con riprese simulate. In una scena ferma con occlusione, il vecchio tracker saltava di circa 105 pixel. Con la correzione non sposta Guido su altri dettagli; lo nasconde fino a una conferma del riferimento. La modalità cartello è stata provata con posizione e prospettiva variabili: personaggio AR visibile, vecchia sovrapposizione nascosta, posa del riferimento aggiornata, nessun errore della pagina. La prova su smartphone reale nella sala resta da fare.
+File essenziali: index.html, guido-demo.css, guido-demo.js, room-anchor.js, guido-cantastorie.png, guido-narration.mp3. Nessuna app da installare.
