@@ -1,0 +1,20 @@
+# Prompt costumi Guido
+
+Generatore immagini integrato. Asset salvati in questa cartella: guido-costume-professor.png, guido-costume-court.png, guido-costume-chronicler.png. Ogni PNG contiene due pose trasparenti affiancate.
+
+## professor
+
+Use case: illustration-story. Asset for mobile AR ghost narrator. Input reference is Guido's identity: keep SAME recognizable mature Italian face, curly dark hair with grey temples, friendly knowing expression, Italian mystery comic illustration (not anime). Create ONE transparent PNG animation sprite sheet with EXACTLY TWO equally sized portrait cells side by side, total landscape aspect ratio 4:3, each cell 2:3. No labels, lines or separators. Each cell shows same Guido from CHEST UP fading below chest into wisps, HEAD LARGE (face occupies at least one third of character height), hands visible. Genuine transparent background. Left cell relaxed closed mouth, right cell slightly open mouth talking, slight 2 degree head tilt and hands subtly gesturing (only small 5% movement). Exact matching head centre and character scale between cells, safe margins, no cell overlap. No feet, no legs. Magical gothic boarding school ghost mood.
+Costume: Guido as a mysterious dark professor: high buttoned black Victorian robe, long black cloak, silver clasps, no scarf, small antique spellbook, one expressive open hand, cool green magical wisps. Original costume reminiscent of Severus Snape's austere black garments but keep Guido's own face and curly hair.
+
+## court
+
+Use case: illustration-story. Asset for mobile AR ghost narrator. Input reference is Guido's identity: keep SAME recognizable mature Italian face, curly dark hair with grey temples, friendly knowing expression, Italian mystery comic illustration (not anime). Create ONE transparent PNG animation sprite sheet with EXACTLY TWO equally sized portrait cells side by side, total landscape aspect ratio 4:3, each cell 2:3. No labels, lines or separators. Each cell shows same Guido from CHEST UP fading below chest into wisps, HEAD LARGE (face occupies at least one third of character height), hands visible. Genuine transparent background. Left cell relaxed closed mouth, right cell slightly open mouth talking, slight 2 degree head tilt and hands subtly gesturing (only small 5% movement). Exact matching head centre and character scale between cells, safe margins, no cell overlap. No feet, no legs. Magical gothic boarding school ghost mood.
+Costume: Guido as a court ghost from a medieval castle: richly embroidered burgundy velvet doublet, white Elizabethan ruff collar, brooch and cape, translucent silver-lavender wisps. Humorous courteous spirit like a nearly headless court ghost, but head safely attached and recognizable, no gore, no severing, no wounds. Both hands making a welcoming courtly gesture.
+
+## chronicler
+
+Use case: illustration-story. Asset for mobile AR ghost narrator. Input reference is Guido's identity: keep SAME recognizable mature Italian face, curly dark hair with grey temples, friendly knowing expression, Italian mystery comic illustration (not anime). Create ONE transparent PNG animation sprite sheet with EXACTLY TWO equally sized portrait cells side by side, total landscape aspect ratio 4:3, each cell 2:3. No labels, lines or separators. Each cell shows same Guido from CHEST UP fading below chest into wisps, HEAD LARGE (face occupies at least one third of character height), hands visible. Genuine transparent background. Left cell relaxed closed mouth, right cell slightly open mouth talking, slight 2 degree head tilt and hands subtly gesturing (only small 5% movement). Exact matching head centre and character scale between cells, safe margins, no cell overlap. No feet, no legs. Magical gothic boarding school ghost mood.
+Costume: Guido as a medieval wandering magical chronicler: aged ochre hood draped BEHIND head (face and curls fully visible), textured brown cloak, cream linen tunic, brass pendant, open parchment scroll in one hand and other hand raised as storyteller, golden ghost wisps. Strongly different silhouette and clothing from black professor and ruff-collared court spirit.
+
+

@@ -2,3 +2,5 @@ INCONTRA GUIDO — OLEGGIO CASTELLO
 Aprire index.html tramite HTTPS o localhost. Toccare Incontra Guido e consentire fotocamera/movimento. Inquadrare un dettaglio e premere Blocca Guido qui. Guido cerca dettagli visivi centrali, compare e racconta. Tre apparizioni e tre storie si alternano. Nessun ordine di tappe nella demo attuale.
 Il labiale segue il volume, non i singoli fonemi. Il posizionamento usa immagini e orientamento: non è un ancoraggio 3D persistente e necessita dettagli visivi. Prove eseguite nel browser con camera simulata; da validare sul telefono nella sala.
 Fonti e testi in RACCONTI-GUIDO.md. Prompt immagini in PROMPT-GUIDO.md.
+
+Versione ghost-guido-3: busto più grande (68vw, massimo 340px). Sei apparizioni alternate, ricordate localmente anche dopo aggiornamento pagina. Tre nuovi costumi a due pose, gesti dimostrativi delle mani e piccolo cenno del capo; rispetto di movimento ridotto.

@@ -124,7 +124,7 @@
     const d=Math.hypot(p.x-display.x,p.y-display.y);if(d>.13){const blend=1-Math.exp(-dt/((lastVisualMotion>.3||lostAt)?12:45));display.x+=(p.x-display.x)*blend;display.y+=(p.y-display.y)*blend;}
     guide.style.left=`${display.x/W*100}%`;guide.style.top=`${display.y/canvas.height*100}%`;
     guide.style.transform=`translate(-50%,-70%) rotate(${sceneAngle*180/Math.PI}deg) scale(${Math.max(.5,Math.min(2,sceneScale))})`;
-    const halfWidth=Math.min(innerWidth*.48,260)*Math.max(.5,Math.min(2,sceneScale))/2/innerWidth*W;
+    const halfWidth=Math.min(innerWidth*.68,340)*Math.max(.5,Math.min(2,sceneScale))/2/innerWidth*W;
     const offscreen=display.x<-halfWidth||display.x>W+halfWidth||display.y<-canvas.height*.1||display.y>canvas.height*1.4;
     guide.hidden=offscreen;
     const confidentlyEstimated=lostAt&&worldRay&&freshPose();

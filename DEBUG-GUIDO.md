@@ -28,3 +28,6 @@ Tre sprite trasparenti a mezzo busto e tre bocche locali. Analizzatore WebAudio 
 
 ## ghost-guido-1
 Tre sprite trasparenti a mezzo busto e tre bocche locali. Analizzatore WebAudio per apertura labbra; sintesi di emergenza con movimento dimostrativo. Test browser: tre varianti distinte, volume anima la bocca, pausa chiude bocca, uscita libera camera, nessun errore JS. Regressione rotazione simulata: massimo errore transitorio 8.12 px, esce e recupera. Nessuna prova su dispositivo fisico.
+
+## ghost-guido-3
+Nuovi costumi: professore, spirito di corte, cronista medievale. Sprite con due pose, maschere CSS, volume per labbra, animazione locale testa/mani. Test browser con camera simulata: tre costumi diversi, labiale attivo e fermo in pausa, camera chiusa correttamente, nessun errore JS. Ispezione visiva: corretta sovrapposizione del viso. Non provato su smartphone fisico.

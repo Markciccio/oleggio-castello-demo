@@ -8,13 +8,18 @@
   $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
   place.onclick=()=>{stopVoice();unlocked=false;guide.hidden=true;voice.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
   let stream=null,opening=false,generation=0,unlocked=false,audioFailed=false;
-  let story=window.GUIDO_STORIES[0],context,analyser,source,synthSpeaking=false,lastVariant=-1,frame=0;
-  const variants=['blue','amber','silver'];
+  let story=window.GUIDO_STORIES[0],context,analyser,source,synthSpeaking=false,lastVariant=readAppearance(),frame=0;
+  const variants=['professor','court','chronicler','blue','amber','silver'];
+  function readAppearance(){try{const n=Number(localStorage.getItem('guido-appearance-v2')??-1);return Number.isInteger(n)&&n>=-1&&n<6?n:-1;}catch{return -1;}}
   function chooseAppearance(){
     lastVariant=(lastVariant+1)%variants.length;
-    const variant=variants[lastVariant];story=window.GUIDO_STORIES[lastVariant];
-    guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=`guido-ghost-${variant}.png`;
-    guide.querySelector('.ghostMouth').src=`guido-mouth-${variant}.png`;
+    try{localStorage.setItem('guido-appearance-v2',lastVariant);}catch{}
+    const variant=variants[lastVariant];story=window.GUIDO_STORIES[lastVariant%window.GUIDO_STORIES.length];
+    const costume=lastVariant<3;guide.classList.toggle('costume',costume);
+    const asset=costume?`guido-costume-${variant}.png`:`guido-ghost-${variant}.png`;
+    const talking=costume?asset:`guido-mouth-${variant}.png`;
+    guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=asset;
+    guide.querySelector('.ghostMouth').src=talking;guide.querySelector('.ghostGesture').src=talking;guide.querySelector('.ghostExpression').src=asset;
     audio.src=`guido-story-${story.id}.mp3`;audioFailed=false;
   }
   function unlockAnimation(){
@@ -26,7 +31,10 @@
       if(!audio.paused&&!audio.muted&&analyser){analyser.getByteTimeDomainData(samples);let sum=0;for(const n of samples)sum+=((n-128)/128)**2;level=Math.min(1,Math.sqrt(sum/samples.length)*10);}
       else if(synthSpeaking)level=.4+.4*Math.sin(t/85);
       guide.style.setProperty('--mouth-open',level.toFixed(3));
-      guide.classList.toggle('speaking',(!audio.paused&&!audio.muted)||synthSpeaking);
+      const speaking=(!audio.paused&&!audio.muted)||synthSpeaking;
+      guide.classList.toggle('speaking',speaking);
+      guide.style.setProperty('--gesture',speaking?(.5+.5*Math.sin(t/1100)).toFixed(3):'0');
+      guide.style.setProperty('--expression',speaking?(.25+.25*Math.sin(t/1800)).toFixed(3):'0');
       frame=requestAnimationFrame(animate);
     }frame=requestAnimationFrame(animate);
   }
