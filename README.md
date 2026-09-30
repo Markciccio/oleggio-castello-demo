@@ -1,11 +1,23 @@
-# Oleggio Castello — demo del municipio
+# Guido AR · Oleggio Castello
 
-Una tappa dimostrativa completa: apertura da QR, incontro con Guido, confronto fotografico 1973/oggi, racconto, enigma e indizio salvato sul dispositivo. Il riferimento storico è una fotografia di una pagina fornita per la proposta; la didascalia riporta l'anno 1973. L'allineamento dei due punti di vista è regolabile.
+DEMO GUIDO AR · OLEGGIO CASTELLO
 
-Il sito include una vista comparativa che funziona anche senza fotocamera. Il pulsante nella tappa apre `demo-ar-municipio.html`. La modalità principale «Guido nella sala» avvia subito la camera, sceglie automaticamente un dettaglio vicino al centro e mostra Guido in quel punto. «Fissa di nuovo» sceglie un nuovo dettaglio; si può anche toccare un punto nella ripresa. Il racconto usa `guido-narration.mp3`, con sintesi vocale del browser come riserva. Il pulsante separato «Confronto AR della facciata» usa MindAR: quando riconosce il cortile, sovrappone la fotografia del 1973. Per aggiungere tappe si espande l'oggetto `STATIONS` in `index.html`; ogni QR può indicare una tappa tramite `?tappa=ID`.
+Apri la demo: https://markciccio.github.io/oleggio-castello-demo/demo-ar-municipio.html?v=marker-ar-1
+Cartello: https://markciccio.github.io/oleggio-castello-demo/cartello-guido-ar.html
 
-`room-anchor.js` segue una piccola porzione dell'immagine e, quando disponibili, usa i sensori di orientamento per aiutare la stabilità e indicare la direzione quando il dettaglio esce dall'inquadratura. È un effetto visivo dimostrativo: non identifica oggetti, non crea un'ancora 3D permanente e può perdere il punto su superfici uniformi o con movimenti rapidi.
+Per presentare Guido nella sala:
+1. Stampa cartello-guido-ar.html a colori, senza ritagliare la fotografia. Puoi anche mostrarlo su un secondo schermo.
+2. Metti il cartello su un supporto fermo, illuminato e senza riflessi.
+3. Sul telefono premi «Guido AR · inquadra il cartello» e consenti la fotocamera.
+4. Inquadra la fotografia. Guido appare agganciato al riferimento: posizione, scala e prospettiva seguono il cartello.
+5. Mantieni il cartello visibile. Se esce dal campo, Guido scompare; riappare quando il riferimento viene riconosciuto.
 
-Questa è una prova per la proposta al Comune, da calibrare sul posto. Guido è un personaggio illustrato su piano 2D.
+Questa modalità usa il riconoscimento dell'immagine e la posa AR di MindAR. Il personaggio è un'illustrazione su piano 3D. Non è un'ancora spaziale permanente: non ricostruisce l'intera sala e non conserva una posizione nel mondo quando il cartello non è visibile.
 
-Stabilità: Guido non dondola durante l’ascolto. La posizione viene aggiornata da un unico filtro che ignora piccole vibrazioni; i sensori aiutano la ricerca del dettaglio senza spostare separatamente il personaggio. La porzione di immagine iniziale resta il riferimento durante il tracking.
+Il confronto AR della facciata del 1973 rimane disponibile separatamente. Le prospettive delle due foto differiscono. La didascalia della fotografia fornita indica il 1973; il racconto va adattato alle fonti storiche locali.
+
+La «Prova libera» segue un dettaglio della ripresa senza cartello: è un effetto dimostrativo. Rifiuta superfici uniformi e non cerca un nuovo punto in tutta l'immagine quando perde il riferimento. L'orientamento aiuta la ricerca, quando disponibile. Il racconto usa guido-narration.mp3 e può ripiegare sulla sintesi vocale del browser.
+
+La tappa completa index.html include il racconto, confronto, enigma e chiave salvata localmente. Nessuna installazione necessaria. Per aggiungere tappe estendere STATIONS in index.html.
+
+Debug eseguito il 30 settembre 2026: prova nel browser con riprese simulate. In una scena ferma con occlusione, il vecchio tracker saltava di circa 105 pixel. Con la correzione non sposta Guido su altri dettagli; lo nasconde fino a una conferma del riferimento. La modalità cartello è stata provata con posizione e prospettiva variabili: personaggio AR visibile, vecchia sovrapposizione nascosta, posa del riferimento aggiornata, nessun errore della pagina. La prova su smartphone reale nella sala resta da fare.

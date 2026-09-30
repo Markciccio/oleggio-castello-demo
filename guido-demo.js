@@ -37,6 +37,7 @@
   let fallbackStream = null;
   let generation = 0;
   let opening = false;
+  let activeMode = 'room';
 
   function stopVoice() {
     recordedVoice.pause();
@@ -114,12 +115,14 @@
   function showOverlay() {
     hud.classList.add('active');
     document.body.classList.add('ar-active');
-    anchor.hidden = !byId('arGuido').checked;
+    anchor.hidden = activeMode !== 'room' || !byId('arGuido').checked;
+    document.body.classList.toggle('marker-active', activeMode !== 'room');
     status.textContent = 'Apro la fotocamera e scelgo un dettaglio vicino al centro…';
   }
 
-  function hideTrackedGuido() {
-    trackedGuido?.setAttribute('visible', false);
+  function syncTrackedGuido() {
+    trackedGuido?.setAttribute('visible', activeMode !== 'room' && byId('arGuido').checked);
+    byId('oldPlane').setAttribute('visible', activeMode === 'facade');
   }
 
   async function stopMindAR() {
@@ -138,12 +141,23 @@
     const system = scene.systems?.['mindar-image-system'];
     if (!system) throw new Error('Sistema AR non disponibile');
     scene.classList.add('active');
-    await system.start();
+    await new Promise((resolve, reject) => {
+      const ready = () => { cleanup(); resolve(); };
+      const failed = () => { cleanup(); reject(new Error('Fotocamera AR non disponibile')); };
+      const timer = setTimeout(failed, 25000);
+      const cleanup = () => { clearTimeout(timer); scene.removeEventListener('arReady', ready); scene.removeEventListener('arError', failed); };
+      scene.addEventListener('arReady', ready);
+      scene.addEventListener('arError', failed);
+      try { system.start(); } catch (error) { cleanup(); reject(error); }
+    });
     started = true;
-    hideTrackedGuido();
     byId('arOpacity').dispatchEvent(new Event('input'));
-    hideTrackedGuido();
-    status.textContent = 'Guido è qui. Inquadra il municipio per vedere anche la foto storica.';
+    trackedGuido.setAttribute('width', activeMode === 'marker' ? .48 : .22);
+    trackedGuido.setAttribute('height', activeMode === 'marker' ? .72 : .33);
+    trackedGuido.setAttribute('position', activeMode === 'marker' ? '0.12 0 0.06' : '0.12 -0.13 0.06');
+    syncTrackedGuido();
+    hud.querySelector('.hud-note').textContent = activeMode === 'marker' ? 'Inquadra la foto sul cartello · Guido segue il cartello' : 'Inquadra la facciata attuale';
+    status.textContent = 'Cerco la foto del municipio. Tienila visibile e ben illuminata.';
     pageStatus.textContent = 'Fotocamera avviata.';
   }
 
@@ -154,6 +168,7 @@
     fallbackVideo.classList.add('active');
     document.body.classList.add('fallback-active');
     await fallbackVideo.play().catch(() => {});
+    hud.querySelector('.hud-note').textContent = 'Prova libera · aggancio visivo dimostrativo';
     status.textContent = 'Cerco un dettaglio vicino al centro per fissare Guido…';
     pageStatus.textContent = 'Fotocamera avviata in modalità demo.';
   }
@@ -166,13 +181,13 @@
     }
     const myGeneration = ++generation;
     opening = true;
+    activeMode = mode;
     showOverlay();
     // Starting speech within the tap gesture helps mobile browsers allow playback.
     speakGuido();
     try {
-      if (mode === 'facade') {
-        try { await startMindAR(); }
-        catch (_) { await stopMindAR(); await startBasicCamera(); }
+      if (mode !== 'room') {
+        await startMindAR();
       } else {
         await startBasicCamera();
       }
@@ -186,7 +201,7 @@
     } catch (_) {
       if (myGeneration === generation) {
         closeDemo();
-        pageStatus.textContent = 'Non riesco ad aprire la fotocamera: controlla il permesso e riprova.';
+        pageStatus.textContent = mode === 'room' ? 'Non riesco ad aprire la fotocamera: controlla il permesso e riprova.' : 'AR non avviata: controlla la connessione e il permesso della fotocamera, poi riprova.';
       }
     } finally {
       opening = false;
@@ -209,13 +224,21 @@
     started = false;
     hud.classList.remove('active');
     document.body.classList.remove('ar-active');
+    document.body.classList.remove('marker-active');
     opening = false;
   }
 
   byId('startAr').onclick = () => startDemo('room');
+  byId('startMarkerAr').onclick = () => startDemo('marker');
   byId('startFacadeAr').onclick = () => startDemo('facade');
   byId('closeAr').onclick = closeDemo;
-  byId('arGuido').addEventListener('input', () => { anchor.hidden = !byId('arGuido').checked; hideTrackedGuido(); });
-  ['arOpacity', 'arScale', 'arX', 'arY'].forEach(id => byId(id).addEventListener('input', hideTrackedGuido));
-  byId('target').addEventListener('targetFound', hideTrackedGuido);
+  byId('arGuido').addEventListener('input', () => { anchor.hidden = activeMode !== 'room' || !byId('arGuido').checked; syncTrackedGuido(); });
+  ['arOpacity', 'arScale', 'arX', 'arY'].forEach(id => byId(id).addEventListener('input', syncTrackedGuido));
+  byId('target').addEventListener('targetFound', () => {
+    syncTrackedGuido();
+    if (activeMode === 'marker') status.textContent = 'Cartello riconosciuto · Guido è agganciato alla sua posizione';
+  });
+  byId('target').addEventListener('targetLost', () => {
+    if (activeMode === 'marker') status.textContent = 'Cartello fuori campo · inquadralo di nuovo per ritrovare Guido';
+  });
 })();

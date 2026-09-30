@@ -32,3 +32,6 @@
 @keyframes directionNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
 @media(max-height:660px){#guideAnchor{top:39%;width:min(34vw,150px)}#guideAnchor img{max-height:38dvh}#guideAnchor .guideBubble{font-size:10px}}
 @media(prefers-reduced-motion:reduce){#guideAnchor,#guideAnchor img,#guidePin,#guideDirection .arrow{animation:none!important}}
+
+.marker-active #guideTapSurface,.marker-active #guideRecenter,.marker-active #guidePin,.marker-active #guideDirection{display:none!important}
+.marker-active .hud-controls label:not(:last-of-type){display:none}

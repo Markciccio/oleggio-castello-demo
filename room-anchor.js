@@ -220,7 +220,7 @@
     displayPoint = null;
     target = {
       x: selected.x, y: selected.y, video: frame.video,
-      model: makeTemplate(frame, selected.x, selected.y), misses: 0,
+      model: makeTemplate(frame, selected.x, selected.y), contrast: selected.contrast, misses: 0,
       visible: true, worldYaw: null, worldPitch: null, lastPose: null,
     };
     rememberDirection(frame.height);
@@ -242,6 +242,11 @@
     if (!frame) return false;
     const selected = chooseCenterFeature(frame);
     if (!selected) return false;
+    if (selected.contrast < 9) {
+      guido.classList.add('offscreen');
+      status.textContent = 'Superficie uniforme: inquadra un dettaglio oppure usa Guido AR con il cartello.';
+      return true;
+    }
     lockAt(frame, selected, true);
     return true;
   }
@@ -258,7 +263,9 @@
     attempt();
   }
 
-  hud.addEventListener('guido-camera-ready', scheduleAutoLock);
+  hud.addEventListener('guido-camera-ready', event => {
+    if (event.detail.mode === 'room') scheduleAutoLock();
+  });
   recenter.addEventListener('click', () => {
     target = null;
     displayPoint = null;
@@ -285,6 +292,7 @@
   });
 
   function scoreAt(frame, cx, cy) {
+    if (patchContrast(frame, cx, cy) < Math.max(9, target.contrast * .65)) return Infinity;
     let brightnessShift = 0;
     for (let i = 0; i < sampleOffsets.length; i++) {
       const [ox, oy] = sampleOffsets[i];
@@ -318,13 +326,8 @@
     if (estimate) {
       coarse = findMatch(frame, estimate.x, estimate.y, 48, 3);
     } else {
-      coarse = {x: width / 2, y: frame.height / 2, score: Infinity};
-      for (let y = 12; y < frame.height - 11; y += 4) {
-        for (let x = 12; x < width - 11; x += 4) {
-          const score = scoreAt(frame, x, y);
-          if (score < coarse.score) coarse = {x, y, score};
-        }
-      }
+      // Without a spatial estimate, do not jump to a similar detail across the room.
+      coarse = findMatch(frame, target.x, target.y, 28, 2);
     }
     return findMatch(frame, coarse.x, coarse.y, 6, 1);
   }
@@ -347,7 +350,7 @@
       const searchX = sensorIsNear ? target.x * .4 + predicted.x * .6 : target.x;
       const searchY = sensorIsNear ? target.y * .4 + predicted.y * .6 : target.y;
       const match = findMatch(frame, searchX, searchY, sensorIsNear ? 22 : 18);
-      if (match.score <= 30) {
+      if (match.score <= Math.min(20, target.contrast * .45)) {
         const pose = freshOrientation();
         if (pose && target.lastPose && pose.time - target.lastPose.time < 1000) {
           const yawChange = angularDifference(pose.yaw, target.lastPose.yaw);
@@ -389,7 +392,12 @@
     lastSearch = now;
     const globalSearch = outside || !estimate;
     const match = reacquire(frame, globalSearch ? null : estimate);
-    if (match.score < (globalSearch ? 17 : 24)) {
+    if (match.score < Math.min(globalSearch ? 12 : 16, target.contrast * .35)) {
+      const previous = target.candidate;
+      const consistent = previous && Math.hypot(previous.x - match.x, previous.y - match.y) < 4;
+      target.candidate = {x: match.x, y: match.y, count: consistent ? previous.count + 1 : 1};
+      if (target.candidate.count < 3) return;
+      target.candidate = null;
       target.visible = true;
       target.misses = 0;
       target.x = match.x;
@@ -402,7 +410,7 @@
       place(target.x, target.y, frame.height);
       bubble.textContent = 'Eccomi di nuovo, nello stesso punto.';
       status.textContent = 'Guido ha ritrovato il dettaglio scelto.';
-    }
+    } else target.candidate = null;
   }
 
   document.getElementById('closeAr').addEventListener('click', () => {
