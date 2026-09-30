@@ -7,3 +7,5 @@ Il sito include una vista comparativa che funziona anche senza fotocamera. Il pu
 `room-anchor.js` segue una piccola porzione dell'immagine e, quando disponibili, usa i sensori di orientamento per aiutare la stabilità e indicare la direzione quando il dettaglio esce dall'inquadratura. È un effetto visivo dimostrativo: non identifica oggetti, non crea un'ancora 3D permanente e può perdere il punto su superfici uniformi o con movimenti rapidi.
 
 Questa è una prova per la proposta al Comune, da calibrare sul posto. Guido è un personaggio illustrato su piano 2D.
+
+Stabilità: Guido non dondola durante l’ascolto. La posizione viene aggiornata da un unico filtro che ignora piccole vibrazioni; i sensori aiutano la ricerca del dettaglio senza spostare separatamente il personaggio. La porzione di immagine iniziale resta il riferimento durante il tracking.

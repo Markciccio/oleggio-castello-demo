@@ -34,7 +34,9 @@
   let target = null;
   let lastCapture = 0;
   let lastSearch = 0;
-  let moveTimer = 0;
+  let displayPoint = null;
+  let desiredPoint = null;
+  let lastRender = 0;
   let orientation = null;
   let yawSign = 1;
   let pitchSign = 1;
@@ -49,12 +51,7 @@
   window.addEventListener('deviceorientation', event => {
     if (Number.isFinite(event.alpha) && Number.isFinite(event.beta)) {
       orientation = {yaw: event.alpha, pitch: event.beta, time: performance.now()};
-      if (target?.visible && yawCalibrated && hud.classList.contains('active') && canvas.height) {
-        const estimate = projectedPoint(canvas.height);
-        if (estimate && Math.hypot(estimate.x - target.x, estimate.y - target.y) < 42) {
-          place(target.x * .55 + estimate.x * .45, target.y * .55 + estimate.y * .45, canvas.height);
-        }
-      }
+
     }
   }, {passive: true});
   for (const id of ['startAr', 'startFacadeAr']) {
@@ -149,8 +146,23 @@
   }
 
   function place(x, y, height) {
-    const px = x / width * 100;
-    const py = y / height * 100;
+    desiredPoint = {x, y, height};
+    if (!displayPoint) displayPoint = {...desiredPoint};
+  }
+
+  function renderPosition(now) {
+    if (!desiredPoint || !displayPoint) return;
+    const elapsed = Math.min(50, Math.max(1, now - lastRender));
+    lastRender = now;
+    const distance = Math.hypot(desiredPoint.x - displayPoint.x, desiredPoint.y - displayPoint.y);
+    // Ignore tiny camera/sensor fluctuations; respond faster to deliberate movement.
+    if (distance > .85) {
+      const blend = 1 - Math.exp(-elapsed / (distance > 8 ? 65 : 150));
+      displayPoint.x += (desiredPoint.x - displayPoint.x) * blend;
+      displayPoint.y += (desiredPoint.y - displayPoint.y) * blend;
+    }
+    const px = displayPoint.x / width * 100;
+    const py = displayPoint.y / desiredPoint.height * 100;
     pin.style.left = `${px}%`;
     pin.style.top = `${py}%`;
     guido.style.left = `${Math.max(19, Math.min(81, px + 11))}%`;
@@ -204,13 +216,8 @@
     status.textContent = 'Guido è tornato nella posizione stimata; cerco il dettaglio nella ripresa.';
   }
 
-  function moveAnimation() {
-    guido.classList.add('moving');
-    clearTimeout(moveTimer);
-    moveTimer = setTimeout(() => guido.classList.remove('moving'), 500);
-  }
-
   function lockAt(frame, selected, automatic) {
+    displayPoint = null;
     target = {
       x: selected.x, y: selected.y, video: frame.video,
       model: makeTemplate(frame, selected.x, selected.y), misses: 0,
@@ -222,7 +229,6 @@
     pin.classList.remove('lost');
     guido.classList.remove('offscreen', 'seeking');
     place(target.x, target.y, frame.height);
-    moveAnimation();
     bubble.textContent = automatic ? 'Eccomi! Resto su questo punto.' : 'Eccomi: seguo il punto che hai scelto.';
     status.textContent = selected.contrast < 9
       ? 'Pochi dettagli visibili: Guido è posizionato al centro. Inquadra un bordo per migliorare l’aggancio.'
@@ -255,6 +261,8 @@
   hud.addEventListener('guido-camera-ready', scheduleAutoLock);
   recenter.addEventListener('click', () => {
     target = null;
+    displayPoint = null;
+    desiredPoint = null;
     yawCalibrated = false;
     pitchCalibrated = false;
     if (!lockCenter()) scheduleAutoLock();
@@ -292,13 +300,14 @@
   }
 
   function findMatch(frame, centerX, centerY, radius, stride = 1) {
-    let best = {x: centerX, y: centerY, score: Infinity};
+    let best = {x: centerX, y: centerY, score: Infinity, cost: Infinity};
     for (let cy = Math.round(centerY - radius); cy <= centerY + radius; cy += stride) {
       if (cy < 11 || cy >= frame.height - 11) continue;
       for (let cx = Math.round(centerX - radius); cx <= centerX + radius; cx += stride) {
         if (cx < 11 || cx >= width - 11) continue;
         const score = scoreAt(frame, cx, cy);
-        if (score < best.score) best = {x: cx, y: cy, score};
+        const cost = score + Math.hypot(cx - centerX, cy - centerY) * .12;
+        if (cost < best.cost) best = {x: cx, y: cy, score, cost};
       }
     }
     return best;
@@ -322,6 +331,7 @@
 
   function follow(now) {
     requestAnimationFrame(follow);
+    if (hud.classList.contains('active')) renderPosition(now);
     if (!target || !hud.classList.contains('active') || now - lastCapture < 110) return;
     lastCapture = now;
     const frame = capture();
@@ -355,21 +365,15 @@
         }
         target.misses = 0;
         const distance = Math.hypot(match.x - target.x, match.y - target.y);
-        target.x = target.x * .35 + match.x * .65;
-        target.y = target.y * .35 + match.y * .65;
+        const blend = distance < 2 ? .18 : distance < 6 ? .4 : .75;
+        target.x += (match.x - target.x) * blend;
+        target.y += (match.y - target.y) * blend;
         place(target.x, target.y, frame.height);
         rememberDirection(frame.height);
         direction.hidden = true;
         guido.classList.remove('offscreen', 'seeking');
         pin.hidden = !document.getElementById('arGuido').checked;
-        if (distance > 2.5) moveAnimation();
-        if (match.score < 18) {
-          const cx = Math.round(target.x), cy = Math.round(target.y);
-          for (let i = 0; i < sampleOffsets.length; i++) {
-            const [ox, oy] = sampleOffsets[i];
-            target.model[i] = target.model[i] * .985 + frame.gray[(cy + oy) * width + cx + ox] * .015;
-          }
-        }
+        // Keep the original template: updating it on jitter gradually changes the anchor.
         return;
       }
       if (++target.misses < 3) return;
@@ -396,7 +400,6 @@
       pin.classList.remove('lost');
       guido.classList.remove('offscreen', 'seeking');
       place(target.x, target.y, frame.height);
-      moveAnimation();
       bubble.textContent = 'Eccomi di nuovo, nello stesso punto.';
       status.textContent = 'Guido ha ritrovato il dettaglio scelto.';
     }
@@ -405,6 +408,8 @@
   document.getElementById('closeAr').addEventListener('click', () => {
     clearTimeout(autoTimer);
     target = null;
+    displayPoint = null;
+    desiredPoint = null;
     yawCalibrated = false;
     pitchCalibrated = false;
     yawSign = 1;
