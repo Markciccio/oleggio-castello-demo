@@ -20,3 +20,5 @@ Il tracker segue fino a 32 punti con optical flow Lucas-Kanade su tre risoluzion
 Limiti: piano illustrato e tracking visivo approssimato, senza ricostruzione 3D. Parallasse, superfici prive di dettagli e movimenti rapidi possono far perdere l'aggancio. Nel test con rotazione rapida compare un ritardo transitorio: la stima non è una misura precisa della posizione nel mondo. La prova nella sala su smartphone resta da fare.
 
 Prova aggiuntiva: `node work/debug-sensor-noise.mjs sensor-corrected`. La correzione impedisce ai sensori di muovere una scena che il tracking visivo vede ferma. La rotazione con perdita e ritorno continua a passare.
+
+Risposta alle rotazioni: predizione sensori al 100%, filtro rapido durante il movimento e calibrazione della focale più veloce. Prova simulata con rotazione di 20 gradi: spostamento equivalente di Guido 19,76 gradi, errore finale al ritorno 0,07 pixel. Il rumore dei sensori su scena ferma resta a 0 pixel. Nessuna prova fisica su smartphone.

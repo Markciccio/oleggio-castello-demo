@@ -13,7 +13,7 @@
     if(!Number.isFinite(e.alpha)||!Number.isFinite(e.beta)||!Number.isFinite(e.gamma))return;
     const now=performance.now();
     if(!filteredAngles)filteredAngles={a:e.alpha,b:e.beta,g:e.gamma,time:now};
-    const blend=1-Math.exp(-Math.min(100,now-filteredAngles.time)/45);
+    const blend=(lostAt||lastVisualMotion>.3)?1:1-Math.exp(-Math.min(100,now-filteredAngles.time)/45);
     for(const [key,value] of [['a',e.alpha],['b',e.beta],['g',e.gamma]])filteredAngles[key]+=difference(value,filteredAngles[key])*blend;
     filteredAngles.time=now;
     const a=filteredAngles.a*Math.PI/180,b=filteredAngles.b*Math.PI/180,g=filteredAngles.g*Math.PI/180;
@@ -105,7 +105,7 @@
     if(current&&lastPose){const angle=Math.acos(Math.min(1,Math.max(-1,dot(current.forward,lastPose.forward))));
       if(angle>.004&&angle<.08){const predicted=projectRay(lastPose.forward,current),observed=apply(t,{x:W/2,y:canvas.height/2});
         const predictedMotion=Math.hypot(predicted.x-W/2,predicted.y-canvas.height/2),observedMotion=Math.hypot(observed.x-W/2,observed.y-canvas.height/2);
-        if(predictedMotion>.5&&observedMotion>.5){const ratio=observedMotion/predictedMotion;if(ratio>.5&&ratio<2)focal=Math.max(W*.6,Math.min(canvas.height*2,focal*(1+(ratio-1)*.04)));}
+        if(predictedMotion>.5&&observedMotion>.5){const ratio=observedMotion/predictedMotion;if(ratio>.5&&ratio<2)focal=Math.max(W*.6,Math.min(canvas.height*2,focal*(1+(ratio-1)*.15)));}
       }
     }
     rememberPose();
@@ -115,13 +115,13 @@
     if(current&&worldRay){const projected=projectRay(worldRay,current);
       // While visual tracking is healthy, sensors predict only small between-frame movement.
       if(lostAt)return projected;
-      if(lastVisualMotion>.3&&Math.hypot(projected.x-anchor.x,projected.y-anchor.y)<16)return{x:anchor.x*.25+projected.x*.75,y:anchor.y*.25+projected.y*.75};
+      if(lastVisualMotion>.3&&Math.hypot(projected.x-anchor.x,projected.y-anchor.y)<W*.3)return projected;
     }
     return {...anchor};
   }
   function render(now){
     const p=estimate();if(!p||!display)return;const dt=Math.min(40,Math.max(1,now-lastRender));lastRender=now;
-    const d=Math.hypot(p.x-display.x,p.y-display.y);if(d>.13){const blend=1-Math.exp(-dt/45);display.x+=(p.x-display.x)*blend;display.y+=(p.y-display.y)*blend;}
+    const d=Math.hypot(p.x-display.x,p.y-display.y);if(d>.13){const blend=1-Math.exp(-dt/((lastVisualMotion>.3||lostAt)?12:45));display.x+=(p.x-display.x)*blend;display.y+=(p.y-display.y)*blend;}
     guide.style.left=`${display.x/W*100}%`;guide.style.top=`${display.y/canvas.height*100}%`;
     guide.style.transform=`translate(-50%,-91%) rotate(${sceneAngle*180/Math.PI}deg) scale(${Math.max(.5,Math.min(2,sceneScale))})`;
     const halfWidth=Math.min(innerWidth*.35,180)*Math.max(.5,Math.min(2,sceneScale))/2/innerWidth*W;
