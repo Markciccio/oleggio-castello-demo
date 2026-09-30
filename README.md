@@ -2,7 +2,7 @@
 
 INCONTRA GUIDO · OLEGGIO CASTELLO
 
-Apri: https://markciccio.github.io/oleggio-castello-demo/?v=scene-flow-1
+Apri: https://markciccio.github.io/oleggio-castello-demo/?v=scene-flow-2
 
 La home ha una sola azione: Incontra Guido. Il tocco apre direttamente la fotocamera. Consenti la fotocamera e, se richiesto, il movimento del telefono. Inquadra un oggetto con dettagli visibili: la demo sceglie un punto vicino al centro e Guido inizia il racconto automaticamente.
 
@@ -13,3 +13,5 @@ Questa è una demo visiva basata su tracking dell'immagine e orientamento. Non r
 Prove del 30 settembre 2026: Edge con fotocamera simulata. Camera ferma: 0 pixel di deriva. Movimento lento: errore massimo 0,84 pixel. Occlusione parziale: 0 pixel di deriva. Uscita e ritorno: verificati; provati anche rotazione con orientamento, voce automatica, chiusura dei flussi e riapertura. Nessun errore della pagina. La validazione in una sala con uno smartphone reale resta da fare.
 
 File essenziali: index.html, guido-demo.css, guido-demo.js, room-anchor.js, guido-cantastorie.png, guido-narration.mp3. Nessuna app da installare.
+
+Controllo del rumore dei sensori: su scena ferma, la prova con orientamento rumoroso oscillava di 7,75 px prima della correzione e 0 px dopo. I sensori predicono il movimento quando la ripresa conferma uno spostamento, o quando il riferimento esce dal campo; non muovono una scena visivamente ferma.

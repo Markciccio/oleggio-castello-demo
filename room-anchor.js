@@ -6,7 +6,7 @@
   const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
   const W=256, R=3;let active=false,previous=null,points=[],anchor=null,display=null,reference=null;
   let lastFrame=0,lastRender=0,lastRecovery=0,lostAt=0,pose=null,lastPose=null,generation=0;
-  let worldRay=null,focal=0,filteredAngles=null,sceneScale=1,sceneAngle=0;
+  let worldRay=null,focal=0,filteredAngles=null,sceneScale=1,sceneAngle=0,lastVisualMotion=0;
   const difference=(a,b)=>((a-b+540)%360)-180;
   const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
   window.addEventListener('deviceorientation',e=>{
@@ -115,7 +115,7 @@
     if(current&&worldRay){const projected=projectRay(worldRay,current);
       // While visual tracking is healthy, sensors predict only small between-frame movement.
       if(lostAt)return projected;
-      if(Math.hypot(projected.x-anchor.x,projected.y-anchor.y)<16)return{x:anchor.x*.25+projected.x*.75,y:anchor.y*.25+projected.y*.75};
+      if(lastVisualMotion>.3&&Math.hypot(projected.x-anchor.x,projected.y-anchor.y)<16)return{x:anchor.x*.25+projected.x*.75,y:anchor.y*.25+projected.y*.75};
     }
     return {...anchor};
   }
@@ -141,13 +141,13 @@
     if(lostAt){if(now-lastRecovery>500){lastRecovery=now;recovery(frame);}return;}
     const pairs=track(previous,frame,points),t=fit(pairs);
     if(!t||Math.hypot(t.a,t.b)<.85||Math.hypot(t.a,t.b)>1.18||Math.abs(t.b)>.2){lostAt=now;return;}
-    const centre=apply(t,{x:W/2,y:canvas.height/2});const motion=Math.hypot(centre.x-W/2,centre.y-canvas.height/2);
+    const centre=apply(t,{x:W/2,y:canvas.height/2});const motion=Math.hypot(centre.x-W/2,centre.y-canvas.height/2);lastVisualMotion=motion+Math.abs(t.a-1)*W+Math.abs(t.b)*W;
     if(motion>.08||Math.abs(t.a-1)>.0005||Math.abs(t.b)>.0005){anchor=apply(t,anchor);sceneScale*=Math.hypot(t.a,t.b);sceneAngle+=Math.atan2(t.b,t.a);}
     updateSensors(t);previous=frame;points=corners(frame[0],t.pairs.map(v=>v.q));
     // Refresh reference while anchored and visible, preserving the current world point.
     if(now-lastRecovery>1500&&anchor.x>0&&anchor.x<W&&anchor.y>0&&anchor.y<canvas.height){reference=remember(frame,points);lastRecovery=now;}
   }
-  hud.addEventListener('guido-camera-ready',()=>{generation++;active=true;previous=null;points=[];anchor=null;display=null;reference=null;lostAt=0;lastFrame=0;lastRecovery=0;worldRay=null;focal=0;lastPose=null;filteredAngles=null;sceneScale=1;sceneAngle=0;guide.hidden=true;});
+  hud.addEventListener('guido-camera-ready',()=>{generation++;active=true;previous=null;points=[];anchor=null;display=null;reference=null;lostAt=0;lastFrame=0;lastRecovery=0;worldRay=null;focal=0;lastPose=null;filteredAngles=null;sceneScale=1;sceneAngle=0;lastVisualMotion=0;guide.hidden=true;});
   hud.addEventListener('guido-close',()=>{generation++;active=false;anchor=null;previous=null;guide.hidden=true;window.guidoDebug=null;});
   requestAnimationFrame(tick);
 })();
