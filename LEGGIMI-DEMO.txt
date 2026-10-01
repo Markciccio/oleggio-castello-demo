@@ -4,3 +4,5 @@ Il labiale segue il volume, non i singoli fonemi. Il posizionamento usa immagini
 Fonti e testi in RACCONTI-GUIDO.md. Prompt immagini in PROMPT-GUIDO.md.
 
 Versione ghost-guido-3: busto più grande (68vw, massimo 340px). Sei apparizioni alternate, ricordate localmente anche dopo aggiornamento pagina. Tre nuovi costumi a due pose, gesti dimostrativi delle mani e piccolo cenno del capo; rispetto di movimento ridotto.
+
+Versione ghost-guido-3: busto più grande (68vw, massimo 340px). Sei apparizioni alternate, ricordate localmente anche dopo aggiornamento pagina. Tre nuovi costumi a due pose, gesti dimostrativi delle mani e piccolo cenno del capo; rispetto di movimento ridotto.

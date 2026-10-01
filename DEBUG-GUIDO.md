@@ -31,3 +31,6 @@ Tre sprite trasparenti a mezzo busto e tre bocche locali. Analizzatore WebAudio 
 
 ## ghost-guido-3
 Nuovi costumi: professore, spirito di corte, cronista medievale. Sprite con due pose, maschere CSS, volume per labbra, animazione locale testa/mani. Test browser con camera simulata: tre costumi diversi, labiale attivo e fermo in pausa, camera chiusa correttamente, nessun errore JS. Ispezione visiva: corretta sovrapposizione del viso. Non provato su smartphone fisico.
+
+## escape-guido-4
+Verifica UI browser: tre tappe completate nell ordine parco, municipio, castello; errore consente nuovo tentativo; premi VIVE, LA, MEMORIA; frase finale corretta e progressi conservati dopo reload. Evento di fine racconto simulato mostra il pulsante quiz. Prova con camera simulata: bocca con apertura ridotta, pausa azzera movimento, camera chiusa correttamente. Nessun errore JS; nessuna verifica su smartphone nella sala.
