@@ -16,7 +16,7 @@
     const count=stages.filter(completed).length;
     $('gameProgress').textContent=`${count} di ${stages.length} parole raccolte nella demo`;
     const all=count===stages.length;$('finalPhrase').hidden=!all;
-    $('finalPhrase').textContent=all?'LA MEMORIA VIVE — Hai ricomposto la frase! L’escape room dimostrativa è completa. Ogni luogo custodisce una parte della storia.':'';
+    $('finalPhrase').textContent=all?`${[...stages].sort((a,b)=>a.slot-b.slot).map(s=>s.word).join(' ')} — Hai ricomposto la frase! L’escape room dimostrativa è completa. Ogni luogo custodisce una parte della storia.`:'';
     $('stageLinks').replaceChildren();
     for(const stop of stages){
       const link=document.createElement('a');link.href=`?tappa=${encodeURIComponent(stop.id)}&v=escape-guido-4`;
