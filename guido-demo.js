@@ -6,7 +6,8 @@
   const audio=new Audio('guido-narration.mp3');audio.preload='auto';
   const place=$('placeGuido'),aim=$('aimPoint');
   $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
-  place.onclick=()=>{stopVoice();unlocked=false;guide.hidden=true;voice.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
+  // Reposition only the visual anchor; keep the current audio/synthesis session untouched.
+  place.onclick=()=>{guide.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
   let stream=null,opening=false,generation=0,unlocked=false,audioFailed=false;
   let story=window.GUIDO_ACTIVE_STAGE.story,context,analyser,source,synthSpeaking=false,lastVariant=readAppearance(),frame=0;
   const variants=['professor','court','chronicler','blue','amber','silver'];
@@ -48,7 +49,7 @@
   window.addEventListener('guido-leave-camera',close);
   audio.onplay=()=>{if(!audio.muted)voice.textContent='■ Ferma Guido';};audio.onended=storyFinished;
   voice.onclick=()=>{if(!audio.paused||window.speechSynthesis?.speaking)stopVoice();else speak();};
-  hud.addEventListener('guido-anchored',()=>{if(!unlocked){unlocked=true;place.textContent='Sposta Guido';place.classList.add('placed');aim.hidden=true;voice.hidden=false;speak();}});
+  hud.addEventListener('guido-anchored',()=>{place.textContent='Sposta Guido';place.classList.add('placed');aim.hidden=true;voice.hidden=false;if(!unlocked){unlocked=true;speak();}});
   function close(){generation++;opening=false;button.disabled=false;stopVoice();stream?.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;video.classList.remove('active');hud.classList.remove('active');document.body.classList.remove('ar-active');guide.hidden=true;hud.dispatchEvent(new Event('guido-close'));}
   $('closeAr').onclick=close;
   button.onclick=async()=>{
