@@ -8,6 +8,7 @@
   $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
   // Reposition only the visual anchor; keep the current audio/synthesis session untouched.
   place.onclick=()=>{guide.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
+  aim.onclick=()=>{aim.disabled=true;aim.querySelector('.aimLabel').textContent='Cerco un punto nella scena…';hud.dispatchEvent(new Event('guido-place'));};
   let stream=null,opening=false,generation=0,unlocked=false,audioFailed=false;
   let story=window.GUIDO_ACTIVE_STAGE.story,context,analyser,source,synthSpeaking=false,lastVariant=readAppearance(),frame=0;
   const variants=['professor','court','chronicler','blue','amber','silver'];
@@ -49,7 +50,7 @@
   window.addEventListener('guido-leave-camera',close);
   audio.onplay=()=>{if(!audio.muted)voice.textContent='■ Ferma Guido';};audio.onended=storyFinished;
   voice.onclick=()=>{if(!audio.paused||window.speechSynthesis?.speaking)stopVoice();else speak();};
-  hud.addEventListener('guido-anchored',()=>{place.textContent='Sposta Guido';place.classList.add('placed');aim.hidden=true;voice.hidden=false;if(!unlocked){unlocked=true;speak();}});
+  hud.addEventListener('guido-anchored',()=>{place.textContent='Sposta Guido';place.hidden=false;place.classList.add('placed');aim.hidden=true;aim.disabled=false;voice.hidden=false;if(!unlocked){unlocked=true;speak();}});
   function close(){generation++;opening=false;button.disabled=false;stopVoice();stream?.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;video.classList.remove('active');hud.classList.remove('active');document.body.classList.remove('ar-active');guide.hidden=true;hud.dispatchEvent(new Event('guido-close'));}
   $('closeAr').onclick=close;
   button.onclick=async()=>{
@@ -65,8 +66,8 @@
       stream=acquired;video.srcObject=stream;await video.play();
       if(current!==generation)return;
       video.classList.add('active');hud.classList.add('active');document.body.classList.add('ar-active');
-      place.textContent='Blocca Guido qui';place.classList.remove('placed');aim.hidden=false;voice.hidden=true;
-      $('arStatus').textContent='Inquadra un dettaglio al centro e premi il pulsante.';
+      place.hidden=true;place.classList.remove('placed');aim.hidden=false;aim.disabled=false;aim.querySelector('.aimLabel').textContent='Tocca qui per posizionare Guido';voice.hidden=true;
+      $('arStatus').textContent='Inquadra un dettaglio e tocca il + per far comparire Guido.';
       hud.dispatchEvent(new CustomEvent('guido-camera-ready',{detail:{mode:'room'}}));
     }catch(error){if(current===generation){close();$('status').textContent='Consenti la fotocamera nelle impostazioni del browser e riprova.';}}
     finally{if(current===generation){opening=false;button.disabled=false;}}
