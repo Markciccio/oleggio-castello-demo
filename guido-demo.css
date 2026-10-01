@@ -45,3 +45,14 @@
 #aimPoint .aimIcon{display:grid;place-items:center;flex:none;width:64px;height:64px;border:2px solid #fff;border-radius:50%;background:#193a30cc;color:#fff;font:400 40px/1 system-ui;box-shadow:0 0 0 7px #ffffff18,0 4px 18px #0004}
 #aimPoint .aimLabel{background:#193a30e6;padding:10px 13px;border-radius:12px;line-height:1.35;max-width:235px}
 #aimPoint:focus-visible .aimIcon{outline:3px solid #eadca7;outline-offset:5px}#aimPoint:disabled{opacity:.85}#aimPoint[hidden],#placeGuido[hidden]{display:none}
+
+/* Performance motion is local to the character; room-anchor owns the outer position. */
+#guideAnchor .ghostFrames{transform-origin:50% 65%;will-change:transform;transition:transform .3s ease}
+#guideAnchor.speaking .ghostFrames{animation:guidoLivingBust 6.4s ease-in-out infinite}
+@keyframes guidoLivingBust{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}22%{transform:translateY(-1.5px) rotate(-.65deg) scale(1.008)}49%{transform:translateY(.5px) rotate(.45deg) scale(1.003)}73%{transform:translateY(-2px) rotate(-.35deg) scale(1.01)}}
+#guideAnchor.costume.speaking .ghostGesture{animation:guidoHandGesture 5.3s ease-in-out infinite;transform-origin:73% 60%}
+@keyframes guidoHandGesture{0%,100%{transform:translateX(-50%) translateY(0) rotate(0deg)}28%{transform:translateX(-50%) translateY(-2px) rotate(-.55deg)}60%{transform:translateX(-50%) translateY(.5px) rotate(.25deg)}82%{transform:translateX(-50%) translateY(-1px) rotate(-.3deg)}}
+#guideAnchor.costume.speaking .ghostExpression{animation:guidoHeadNod 4.8s ease-in-out infinite}
+@keyframes guidoHeadNod{0%,100%{transform:rotate(0deg) translateY(0)}35%{transform:rotate(-1.35deg) translateY(.5px)}70%{transform:rotate(1.1deg) translateY(-.5px)}}
+@keyframes guidoMouthNod{0%,100%{transform:translateX(-50%) rotate(0deg) translateY(0)}35%{transform:translateX(-50%) rotate(-1.35deg) translateY(.5px)}70%{transform:translateX(-50%) rotate(1.1deg) translateY(-.5px)}}
+@media(prefers-reduced-motion:reduce){#guideAnchor.speaking .ghostFrames,#guideAnchor.costume.speaking .ghostGesture,#guideAnchor.costume.speaking .ghostExpression,#guideAnchor.costume.speaking .ghostMouth{animation:none}}

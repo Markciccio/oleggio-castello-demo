@@ -19,7 +19,7 @@
     $('finalPhrase').textContent=all?`${[...stages].sort((a,b)=>a.slot-b.slot).map(s=>s.word).join(' ')} — Hai ricomposto la frase! L’escape room dimostrativa è completa. Ogni luogo custodisce una parte della storia.`:'';
     $('stageLinks').replaceChildren();
     for(const stop of stages){
-      const link=document.createElement('a');link.href=`?tappa=${encodeURIComponent(stop.id)}&v=escape-guido-6`;
+      const link=document.createElement('a');link.href=`?tappa=${encodeURIComponent(stop.id)}&v=escape-guido-7`;
       const label=document.createElement('span');label.textContent=`${completed(stop)?'✓ ':''}${stop.title}`;
       const detail=document.createElement('small');detail.textContent=stop.id===stage.id?'Sei in questa tappa':completed(stop)?'Parola già raccolta · puoi riascoltare':'Apri questa tappa della demo';link.append(label,detail);$('stageLinks').append(link);
     }

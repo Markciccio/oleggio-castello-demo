@@ -36,6 +36,7 @@
       guide.style.setProperty('--mouth-open',mouthLevel.toFixed(3));
       const speaking=(!audio.paused&&!audio.muted)||synthSpeaking;
       guide.classList.toggle('speaking',speaking);
+      guide.style.setProperty('--speech-energy',speaking?(mouthLevel/.42).toFixed(3):'0');
       guide.style.setProperty('--gesture',speaking?(.5+.5*Math.sin(t/1100)).toFixed(3):'0');
       guide.style.setProperty('--expression',speaking?(.25+.25*Math.sin(t/1800)).toFixed(3):'0');
       frame=requestAnimationFrame(animate);
