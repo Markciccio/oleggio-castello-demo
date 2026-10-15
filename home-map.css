@@ -1,0 +1,1 @@
+.home{max-width:1160px}.home>:not(.mapCard){max-width:444px;margin-left:auto;margin-right:auto}.home>.mapCard{width:100%;margin:18px 0 22px}.mapCard iframe{display:block;width:100%;border:0;min-height:500px;border-radius:18px;background:#f7f5ee}@media(max-width:600px){.home{padding-left:12px;padding-right:12px}.home>.mapCard{margin-top:16px}.mapCard iframe{min-height:720px}}
