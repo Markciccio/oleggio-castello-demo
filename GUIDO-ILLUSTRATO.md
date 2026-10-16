@@ -1,3 +1,5 @@
+> Aggiornamento: la figura attiva usa il sistema articolato descritto in GUIDO-ARTICOLATO.md. Questa pagina documenta la prova precedente e il suo ripiego.
+
 # Guido illustrato — prova a sei pose
 
 Il riquadro Incontra Guido è subito sotto il titolo e conserva la miniatura guido-ghost-blue.png. Il personaggio illustrato appare nella prova dei racconti, nel Gioco scuola e nella comparsa in fotocamera. La voce Giuseppe e tutti i suoi parametri restano invariati.

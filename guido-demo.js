@@ -18,7 +18,7 @@
     audio.src=window.GuidoVoice.url('story-'+window.GUIDO_ACTIVE_STAGE.id);
   }
   function unlockAnimation(){
-    try{if(!context){context=new (window.AudioContext||window.webkitAudioContext)();source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=512;source.connect(analyser);analyser.connect(context.destination);}context.resume().catch(()=>{});}catch{}
+    const meter=window.GuidoVoice.unlockMeter();if(meter){context=meter.context;analyser=meter.analyser;}
     if(frame)return;
     const samples=new Uint8Array(512);let mouthLevel=0;
     function animate(t){
