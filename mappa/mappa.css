@@ -5,3 +5,5 @@
 .place-photo{margin:20px 0}.place-photo img{display:block;width:100%;height:auto;border-radius:6px;border:1px solid #ded7c5}.place-photo a{display:block}.place-photo figcaption{font-size:10px;line-height:1.6;color:var(--muted);margin-top:8px}.citation{color:#805234;text-underline-offset:3px;font-size:11px}#card h3{font:22px/1.2 Georgia,serif;margin:27px 0 14px}.workspace{align-items:start}.canvas{align-self:stretch}aside{min-height:100%}
 
 .embedded body{background:transparent}.embedded body>header,.embedded .intro,.embedded footer{display:none}.embedded main{padding:0;max-width:none}.embedded .explorer{border-radius:18px}.embedded .editor-note{display:none}
+
+.play-stage{display:block;margin:22px 0;padding:14px 16px;border-radius:9px;background:#205b49;color:white;text-decoration:none;text-align:center;font-size:14px;font-weight:600}.play-stage:focus-visible{outline:3px solid #ad6b46;outline-offset:3px}

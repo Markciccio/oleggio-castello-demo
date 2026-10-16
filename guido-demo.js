@@ -3,7 +3,7 @@
   const $ = id => document.getElementById(id);
   const video=$('fallbackCamera'),hud=$('arHud'),guide=$('guideAnchor');
   const voice=$('guideVoice'),button=$('startAr');
-  const audio=new Audio('guido-narration.mp3');audio.preload='auto';
+  const audio=new Audio();audio.preload='auto';
   const place=$('placeGuido'),aim=$('aimPoint');
   $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
   // Reposition only the visual anchor; keep the current audio/synthesis session untouched.
@@ -22,7 +22,7 @@
     const talking=costume?asset:`guido-mouth-${variant}.png`;
     guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=asset;
     guide.querySelector('.ghostMouth').src=talking;guide.querySelector('.ghostGesture').src=talking;guide.querySelector('.ghostExpression').src=asset;
-    audio.src=window.GUIDO_ACTIVE_STAGE.audio;audioFailed=false;
+    audioFailed=!window.GUIDO_ACTIVE_STAGE.audio;if(!audioFailed)audio.src=window.GUIDO_ACTIVE_STAGE.audio;else{audio.removeAttribute('src');audio.load();}
   }
   function unlockAnimation(){
     try{if(!context){context=new (window.AudioContext||window.webkitAudioContext)();source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=512;source.connect(analyser);analyser.connect(context.destination);}context.resume().catch(()=>{});}catch{}
@@ -57,7 +57,7 @@
   button.onclick=async()=>{
     if(opening)return;opening=true;button.disabled=true;unlocked=false;const current=++generation;chooseAppearance();unlockAnimation();
     // Unlock prerecorded audio in the initial gesture; start the story once Guido is anchored.
-    audio.muted=true;audio.play().then(()=>{if(!unlocked){audio.pause();audio.currentTime=0;audio.muted=false;}}).catch(()=>{audio.muted=false;});
+    if(!audioFailed){audio.muted=true;audio.play().then(()=>{if(!unlocked){audio.pause();audio.currentTime=0;audio.muted=false;}}).catch(()=>{audio.muted=false;});}
     if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().catch(()=>{});
     try{
       if(!navigator.mediaDevices?.getUserMedia)throw Error('Fotocamera non disponibile');
