@@ -36,7 +36,7 @@
  c.restore();c.restore()}
  function render(t,speaking){c.setTransform(1.5,0,0,1.5,0,0);c.clearRect(0,0,480,720);upper(0);upper(1);piece(parts,P[0],44,195,392,500);head(t,speaking);lower(0,t);lower(1,t);
  for(const actor of actors){if(!actor.figure.getClientRects().length)continue;actor.ctx.clearRect(0,0,720,1080);actor.ctx.drawImage(master,0,0);actor.figure.dataset.pose=gestures[lastPose][0];actor.figure.dataset.frame=lastPose;actor.figure.classList.toggle('isSpeaking',speaking);}}
- function tick(t){requestAnimationFrame(tick);if(t-lastTime<32||document.hidden||!ready)return;const dt=Math.min(100,t-lastTime||32);lastTime=t;
+ function tick(t){requestAnimationFrame(tick);if(t-lastTime<32||document.hidden||!ready||!figures.some(f=>f.getClientRects().length))return;const dt=Math.min(100,t-lastTime||32);lastTime=t;
  const speaking=!audio.paused&&!audio.muted&&!audio.ended;
  let selected=0;if(!reduced.matches){if(forced!==null)selected=forced;else if(t<greetUntil)selected=9;else if(speaking){const sequence=[1,2,3,4,8,5,6,7,10,11,0];selected=sequence[Math.floor(audio.currentTime/2.7)%sequence.length]}}
  lastPose=selected;const target=gestures[selected].slice(1);const ease=1-Math.exp(-dt/220);for(const i of[0,1,2,3,6])joints[i]+=(target[i]-joints[i])*ease;
