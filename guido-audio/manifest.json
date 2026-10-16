@@ -387,6 +387,138 @@
       "file": "quiz-25.mp3",
       "sha256": "0ae7cd2ed2589cabc2c3e5ea5c00731801f3e7e4dd7fe4f027096d9572914d9d"
     },
+    "escape-intro": {
+      "file": "escape-intro.mp3",
+      "sha256": "4a160f87fa0379229ecf18ddfabcf0c5bf9d36e1aa8b4a77d095f7004ef454ea"
+    },
+    "puzzle-1": {
+      "file": "puzzle-1.mp3",
+      "sha256": "a6a57c21d14bebbd4473edf180c83d1b2af039323fb11acff68024d7d38ef69a"
+    },
+    "puzzle-2A": {
+      "file": "puzzle-2A.mp3",
+      "sha256": "84c37a34998c70ff4510b9bd0e24bcb4880766cf008abfdcebc6efb2d7ae72b7"
+    },
+    "puzzle-2B": {
+      "file": "puzzle-2B.mp3",
+      "sha256": "d05c30addd5a1e52c72a604138c4d4520dc492e72564e3ad5275f244dc828531"
+    },
+    "puzzle-3": {
+      "file": "puzzle-3.mp3",
+      "sha256": "4cc4d9e139d6357e8ca4a42ebab64ffb853b601cf5d84c2c7b105fe5a5645561"
+    },
+    "puzzle-3A": {
+      "file": "puzzle-3A.mp3",
+      "sha256": "c020a59b0238b3500a54634a6bf61753707a657b73227b9244b11e6dda2ce628"
+    },
+    "puzzle-4": {
+      "file": "puzzle-4.mp3",
+      "sha256": "dbea0322679ec0972500a0c6e70a8af75441903468f43f7e9065f4bfae5a2588"
+    },
+    "puzzle-5": {
+      "file": "puzzle-5.mp3",
+      "sha256": "701af5d3acdefa9446b7d99592c70c94429d981d9601addff9320d67044d5cf9"
+    },
+    "puzzle-6": {
+      "file": "puzzle-6.mp3",
+      "sha256": "6457efbd3cf6e481eee8bb656267f05c42b260c27b903f0d7f519e159a50b168"
+    },
+    "puzzle-7A": {
+      "file": "puzzle-7A.mp3",
+      "sha256": "e376cc0808182da58fa4f54dcdb0e157b6c9bdccee2869250f973f26a16937ad"
+    },
+    "puzzle-7B": {
+      "file": "puzzle-7B.mp3",
+      "sha256": "97f9f97f59a18aec78bbd2da65148597d6f6f9be4186fa5398c950e1e3680102"
+    },
+    "puzzle-8": {
+      "file": "puzzle-8.mp3",
+      "sha256": "4a2d766e1fa3fe9b7ee0eb8e55a0485c0e062edb513ca03590cdf08e005fbd90"
+    },
+    "puzzle-8B": {
+      "file": "puzzle-8B.mp3",
+      "sha256": "b4806e6ce16acb210b7b9ecbe97b96c0b418e8e1cddbf012e950b9f73aa96e63"
+    },
+    "puzzle-9": {
+      "file": "puzzle-9.mp3",
+      "sha256": "d04371e84eecbafde25529e3c8b5534e7eee4bfd352befc16f48d3fbf45aca47"
+    },
+    "puzzle-10": {
+      "file": "puzzle-10.mp3",
+      "sha256": "4af5c74e10ffdadc377990d34423d5f382043304767f7f7e286d0e0483af0871"
+    },
+    "puzzle-11": {
+      "file": "puzzle-11.mp3",
+      "sha256": "6423a19fa965b7ca478e1f69d4e5b8698ee08460f8be9d0a1c06e0b980f4ec39"
+    },
+    "puzzle-12": {
+      "file": "puzzle-12.mp3",
+      "sha256": "5f0f6db751c371efa38598f2914a1757ca70b248e306bc3e141f323b41cd7d00"
+    },
+    "puzzle-12B": {
+      "file": "puzzle-12B.mp3",
+      "sha256": "505157db55eca57923a9b372a4af5e99f02617cdc11ae89e14e8b319fdee1f90"
+    },
+    "puzzle-13": {
+      "file": "puzzle-13.mp3",
+      "sha256": "ace89360e054bb44f889e7651bc1ede436e1dc62d2f1519c9baddbbb3019b2d2"
+    },
+    "puzzle-14": {
+      "file": "puzzle-14.mp3",
+      "sha256": "813ed796dd9182ac751c34763013f0f41d337700e5857d5214991c8d4bea8f8a"
+    },
+    "puzzle-15": {
+      "file": "puzzle-15.mp3",
+      "sha256": "549291d2c4913f9d5c0ed4e878825a2ac8c0deedfb8c92e58fcc34095f4dca02"
+    },
+    "puzzle-16": {
+      "file": "puzzle-16.mp3",
+      "sha256": "3b1e250842637bb62f8ed43b2505f576fb4aaca5d2127fac33915c237e856b61"
+    },
+    "puzzle-17": {
+      "file": "puzzle-17.mp3",
+      "sha256": "46c45f717e4ab1e4fc994e7d25f140d20f0f79c30ef227dab98a0a93f42661c5"
+    },
+    "puzzle-18": {
+      "file": "puzzle-18.mp3",
+      "sha256": "4d6993d6ea1e90a88b1db9677d1364ecf883eecc97a84799d9eee59d4d273d53"
+    },
+    "puzzle-19": {
+      "file": "puzzle-19.mp3",
+      "sha256": "ad13575a220ed86e200ac146ff8fee11c414aed1965f52c7b65a1fc84dacbbe2"
+    },
+    "puzzle-20": {
+      "file": "puzzle-20.mp3",
+      "sha256": "937d53ca6306d6dd565d5ccc4d8c8e7e6a6147a21db9a384c3fba1cab678f906"
+    },
+    "puzzle-21": {
+      "file": "puzzle-21.mp3",
+      "sha256": "6f3c8706f6b306f0431bf5fca74601887e6913f4ab028fafd30de26a05b2abd0"
+    },
+    "puzzle-22": {
+      "file": "puzzle-22.mp3",
+      "sha256": "95b5aee78d3e260212786ea8483b1a60d1a8cc2f185e1140f111b28a27661b1f"
+    },
+    "puzzle-22A": {
+      "file": "puzzle-22A.mp3",
+      "sha256": "23e7669ae99f410b5db71072f89ed9c3d45fa7be12ff91fa3ee93e84d6a0e0b5"
+    },
+    "puzzle-23": {
+      "file": "puzzle-23.mp3",
+      "sha256": "40c6ce864ac6aa2542dabda1501ff4d9adb78b6eb7d930f13dc9e1e1c6ba3ea3"
+    },
+    "puzzle-24": {
+      "file": "puzzle-24.mp3",
+      "sha256": "bcaa138920ea053714dd92a48bde722bf4cf537a937c349a9ee34913ee1c7b43"
+    },
+    "puzzle-24B": {
+      "file": "puzzle-24B.mp3",
+      "sha256": "a9354194eac7a46a55dd99db095c849f4e1c114291f0653b6d765a04e54177e3"
+    },
+    "puzzle-25": {
+      "file": "puzzle-25.mp3",
+      "sha256": "0337c92ca21002931e1a2c5610202ad56932efa958d5f07408ad69df841ed255"
+    },
     "story-4": {
       "file": "../guido-narration.mp3",
       "original": true

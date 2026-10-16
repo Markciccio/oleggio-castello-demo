@@ -1,4 +1,6 @@
-# Gioco completo delle 32 tappe
+# Gioco scuola — 32 tappe
+
+Questa modalità conserva le domande didattiche precedenti. L’escape room digitale è separata e descritta in ESCAPE-DIGITALE.md.
 
 Ogni voce di mappa/punti.js è collegata a una tappa in escape-stages.js: numerazione identica ai fogli a matita, comprese le lettere. I testi e gli enigmi usano le informazioni degli elenchi e, per la chiesina, la ricerca già documentata. Le descrizioni brevi basate sugli appunti non costituiscono una ricerca storica completa su ciascun edificio. Posizioni e itinerari pedonali restano da confermare.
 

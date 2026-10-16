@@ -4,7 +4,7 @@
  const audio=new Audio();audio.preload='none';
  const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('oleggio-guido-voice'):null;
  let key=null;const buttons=new Map();
- function url(id){if(!/^(intro|(story|card|quiz)-[0-9]{1,2}[AB]?)$/.test(id))throw new Error('Audio sconosciuto');return new URL(id==='story-4'?'../guido-narration.mp3':id+'.mp3',base).href;}
+ function url(id){if(!/^(intro|escape-intro|(story|card|quiz|puzzle)-[0-9]{1,2}[AB]?)$/.test(id))throw new Error('Audio sconosciuto');return new URL(id==='story-4'?'../guido-narration.mp3':id+'.mp3',base).href;}
  function refresh(){for(const [button,item]of buttons){if(!button.isConnected){buttons.delete(button);continue;}const active=key===item.key&&!audio.paused;button.textContent=active?'■ Ferma Guido':item.label;button.setAttribute('aria-pressed',String(active));}window.dispatchEvent(new CustomEvent('guido-voice-change',{detail:{key,playing:!audio.paused}}));}
  function stop(){audio.pause();try{audio.currentTime=0;}catch{}refresh();}
  function stopAll(){channel?.postMessage('stop');stop();}

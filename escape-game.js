@@ -22,7 +22,7 @@
     $('finalPhrase').textContent=all?`${[...stages].sort((a,b)=>a.slot-b.slot).map(s=>s.word).join(' ')} — Hai ricomposto la frase! Hai completato tutte le 32 tappe. Ogni luogo custodisce una parte della storia.`:'';
     $('stageLinks').replaceChildren();
     for(const stop of stages){
-      const link=document.createElement('a');link.href=`?tappa=${encodeURIComponent(stop.id)}&v=gioco-32-1#tappa-gioco`;
+      const link=document.createElement('a');link.href=`?mode=scuola&tappa=${encodeURIComponent(stop.id)}&v=gioco-32-1#tappa-gioco`;
       const label=document.createElement('span');label.textContent=`${completed(stop)?'✓ ':''}${stop.id} · ${stop.title}`;
       const detail=document.createElement('small');detail.textContent=stop.id===stage.id?'Sei in questa tappa':completed(stop)?'Parola già raccolta · puoi riascoltare':'Apri questa tappa';link.append(label,detail);$('stageLinks').append(link);
     }
@@ -34,9 +34,10 @@
     const word=document.createElement('b');word.textContent=stage.word;
     const hint=document.createElement('span');hint.textContent='Scegli un altro luogo sulla mappa e continua: puoi completare le tappe nell’ordine che preferisci.';
     $('wordReward').append(message,word,hint);
-    const next=stages.find(s=>!completed(s));if(next){const link=document.createElement('a');link.className='secondary next-stage';link.href='?tappa='+encodeURIComponent(next.id)+'&v=gioco-32-1#tappa-gioco';link.textContent='Prossima tappa da scoprire: '+next.id+' · '+next.title;$('wordReward').append(link);}
+    const next=stages.find(s=>!completed(s));if(next){const link=document.createElement('a');link.className='secondary next-stage';link.href='?mode=scuola&tappa='+encodeURIComponent(next.id)+'&v=gioco-32-1#tappa-gioco';link.textContent='Prossima tappa da scoprire: '+next.id+' · '+next.title;$('wordReward').append(link);}
   }
   function openQuiz(){
+    window.GuidoEscape?.showSchool();
     window.dispatchEvent(new Event('guido-leave-camera'));
     $('quizCard').hidden=false;$('quizQuestion').textContent=stage.question;$('quizAnswers').replaceChildren();$('wordReward').hidden=true;
     $('quizFeedback').textContent=completed(stage)?'Tappa già completata: la tua parola è salvata.':'Ascolta o leggi il racconto, poi scegli la risposta.';
@@ -53,8 +54,8 @@
     if(completed(stage)){for(const choice of $('quizAnswers').children)choice.disabled=true;showReward();}
     $('quizCard').scrollIntoView({behavior:'smooth',block:'start'});
   }
-  $('stageIntro').textContent='32 luoghi, 32 enigmi. Scegli una tappa e ricomponi la frase nascosta.';$('activeStageTitle').textContent=stage.id+' · '+stage.title;
-  $('facadeCard').hidden=stage.id!=='4';$('storyText').textContent=stage.story.text;
+  $('stageIntro').textContent='Esplora i luoghi, ascolta Guido e scopri il paese tra ieri e oggi.';$('activeStageTitle').textContent=stage.id+' · '+stage.title;
+  $('facadeCard').hidden=false;$('storyText').textContent=stage.story.text;
   const photo=$('stagePhoto'),point=window.MAPPA_PUNTI.find(p=>p.id===stage.id);photo.hidden=!point?.image;
   if(point?.image){const img=document.createElement('img');img.src='mappa/'+point.image.src;img.alt=point.image.alt;const caption=document.createElement('figcaption');caption.textContent=point.image.caption;photo.append(img,caption);}
   window.GuidoVoice.bind($('listenStory'),'story-'+stage.id,'Ascolta il racconto con Guido');

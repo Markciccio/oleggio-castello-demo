@@ -7,3 +7,5 @@ Il catalogo guido-audio/manifest.json registra voce, parametri e file: introduzi
 I pulsanti Ascolta avviano la voce dopo il tocco. La voce è condivisa dal racconto e da Guido in camera; le letture nelle schede interrompono quelle già attive, anche tra la mappa incorporata e la pagina principale. In caso di errore audio viene proposto di riprovare, senza sostituire il cantastorie con una voce diversa.
 
 Verifiche: decodifica di tutti i nuovi MP3, presenza dei 97 audio complessivi, riproduzione di introduzione, scheda, racconto, enigma e registrazione originale; esclusione della sintesi del dispositivo; interruzione tra mappa e pagina; avvio e chiusura della camera simulata. La prova su uno smartphone fisico resta da fare.
+
+L’escape room digitale aggiunge 33 audio della stessa voce: introduzione alla missione e 32 istruzioni degli enigmi. Catalogo complessivo: 130 voci, di cui 129 file nuovi più l’originale del municipio.
