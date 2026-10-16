@@ -10,18 +10,11 @@
   place.onclick=()=>{guide.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
   aim.onclick=()=>{aim.disabled=true;aim.querySelector('.aimLabel').textContent='Cerco un punto nella scena…';hud.dispatchEvent(new Event('guido-place'));};
   let stream=null,opening=false,generation=0,unlocked=false;
-  let story=window.GUIDO_ACTIVE_STAGE.story,context,analyser,source,synthSpeaking=false,lastVariant=readAppearance(),frame=0;
-  const variants=['professor','court','chronicler','blue','amber','silver'];
-  function readAppearance(){try{const n=Number(localStorage.getItem('guido-appearance-v2')??-1);return Number.isInteger(n)&&n>=-1&&n<6?n:-1;}catch{return -1;}}
+  let story=window.GUIDO_ACTIVE_STAGE.story,context,analyser,source,synthSpeaking=false,frame=0;
   function chooseAppearance(){
-    lastVariant=(lastVariant+1)%variants.length;
-    try{localStorage.setItem('guido-appearance-v2',lastVariant);}catch{}
-    const variant=variants[lastVariant];story=window.GUIDO_ACTIVE_STAGE.story;
-    const costume=lastVariant<3;guide.classList.toggle('costume',costume);
-    const asset=costume?`guido-costume-${variant}.png`:`guido-ghost-${variant}.png`;
-    const talking=costume?asset:`guido-mouth-${variant}.png`;
-    guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=asset;
-    guide.querySelector('.ghostMouth').src=talking;guide.querySelector('.ghostGesture').src=talking;guide.querySelector('.ghostExpression').src=asset;
+    story=window.GUIDO_ACTIVE_STAGE.story;
+    guide.classList.remove('costume');guide.classList.add('illustrated');guide.dataset.variant='illustrated';
+    window.GuidoPerformer?.greet();
     audio.src=window.GuidoVoice.url('story-'+window.GUIDO_ACTIVE_STAGE.id);
   }
   function unlockAnimation(){
