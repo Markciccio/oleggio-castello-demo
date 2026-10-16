@@ -11,6 +11,6 @@ window.GUIDO_STAGES=quizzes.map((row,index)=>{
  (id==='1'?'La chiesina è dedicata ai Santi Rocco e Grato. Nella cartolina si vedono il portico, il campanile e le persone riunite davanti all’ingresso. La data della fotografia resta da accertare.':
  id==='4'?'Nel confronto fotografico, l’immagine del 1973 mostra una casa colonica. Oggi quell’edificio è il municipio. Guarda gli archi e le finestre nelle due immagini.':
  'Per questo luogo, gli appunti del progetto ricordano: '+point.description+' '+explanation);
- return {id,title:point.title,intro:'Scegli un luogo sulla mappa, leggi o ascolta Guido e risolvi l’enigma.',story:{id,text},audio:id==='4'?'guido-narration.mp3':null,question,answers,correct,explanation,word:words[index],slot:index};
+ return {id,title:point.title,intro:'Scegli un luogo sulla mappa, leggi o ascolta Guido e risolvi l’enigma.',story:{id,text},audio:id==='4'?'guido-narration.mp3':'guido-audio/story-'+id+'.mp3',question,answers,correct,explanation,word:words[index],slot:index};
 });
 })();

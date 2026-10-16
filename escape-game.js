@@ -44,7 +44,7 @@
       const button=document.createElement('button');button.textContent=answer;
       button.onclick=()=>{
         if(index!==stage.correct){button.classList.add('wrong');$('quizFeedback').textContent='Non è la risposta giusta. Ripensa al racconto e riprova.';return;}
-        button.classList.add('correct');$('quizFeedback').textContent=stage.explanation;
+        window.GuidoVoice.stopAll();button.classList.add('correct');$('quizFeedback').textContent=stage.explanation;
         progress[stage.id]={completed:true,completedAt:progress[stage.id]?.completedAt||new Date().toISOString()};save();
         for(const choice of $('quizAnswers').children)choice.disabled=true;
         showReward();renderJourney();$('wordReward').scrollIntoView({behavior:'smooth',block:'center'});
@@ -57,14 +57,8 @@
   $('facadeCard').hidden=stage.id!=='4';$('storyText').textContent=stage.story.text;
   const photo=$('stagePhoto'),point=window.MAPPA_PUNTI.find(p=>p.id===stage.id);photo.hidden=!point?.image;
   if(point?.image){const img=document.createElement('img');img.src='mappa/'+point.image.src;img.alt=point.image.alt;const caption=document.createElement('figcaption');caption.textContent=point.image.caption;photo.append(img,caption);}
-  $('listenStory').onclick=()=>{
-    if(!window.speechSynthesis){$('listenStatus').textContent='La voce non è disponibile su questo dispositivo: puoi leggere il racconto.';return;}
-    if(speechSynthesis.speaking){speechSynthesis.cancel();$('listenStory').textContent='Ascolta il racconto';return;}
-    const utterance=new SpeechSynthesisUtterance(stage.story.text);utterance.lang='it-IT';utterance.rate=.9;
-    const italian=speechSynthesis.getVoices().find(v=>v.lang==='it-IT');if(italian)utterance.voice=italian;
-    $('listenStory').textContent='Ferma la lettura';utterance.onend=()=>{$('listenStory').textContent='Riascolta il racconto';$('homeQuiz').hidden=false;};utterance.onerror=()=>{$('listenStory').textContent='Ascolta il racconto';$('listenStatus').textContent='Lettura interrotta. Puoi continuare con il testo.';};speechSynthesis.speak(utterance);
-  };
-  window.addEventListener('pagehide',()=>window.speechSynthesis?.cancel());
+  window.GuidoVoice.bind($('listenStory'),'story-'+stage.id,'Ascolta il racconto con Guido');
+  window.GuidoVoice.bind($('listenQuiz'),'quiz-'+stage.id,'Ascolta l’enigma con Guido');
   $('readQuiz').onclick=openQuiz;$('homeQuiz').onclick=openQuiz;$('cameraQuiz').onclick=openQuiz;
   $('toJourney').onclick=()=>$('journeyCard').scrollIntoView({behavior:'smooth',block:'start'});
   window.addEventListener('guido-story-finished',event=>{

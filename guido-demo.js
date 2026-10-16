@@ -3,13 +3,13 @@
   const $ = id => document.getElementById(id);
   const video=$('fallbackCamera'),hud=$('arHud'),guide=$('guideAnchor');
   const voice=$('guideVoice'),button=$('startAr');
-  const audio=new Audio();audio.preload='auto';
+  const audio=window.GuidoVoice.audio;
   const place=$('placeGuido'),aim=$('aimPoint');
   $('timeSlider').oninput=e=>$('historicLayer').style.clipPath=`inset(0 ${100-e.target.value}% 0 0)`;
   // Reposition only the visual anchor; keep the current audio/synthesis session untouched.
   place.onclick=()=>{guide.hidden=true;place.textContent='Cerco il punto…';hud.dispatchEvent(new Event('guido-place'));};
   aim.onclick=()=>{aim.disabled=true;aim.querySelector('.aimLabel').textContent='Cerco un punto nella scena…';hud.dispatchEvent(new Event('guido-place'));};
-  let stream=null,opening=false,generation=0,unlocked=false,audioFailed=false;
+  let stream=null,opening=false,generation=0,unlocked=false;
   let story=window.GUIDO_ACTIVE_STAGE.story,context,analyser,source,synthSpeaking=false,lastVariant=readAppearance(),frame=0;
   const variants=['professor','court','chronicler','blue','amber','silver'];
   function readAppearance(){try{const n=Number(localStorage.getItem('guido-appearance-v2')??-1);return Number.isInteger(n)&&n>=-1&&n<6?n:-1;}catch{return -1;}}
@@ -22,7 +22,7 @@
     const talking=costume?asset:`guido-mouth-${variant}.png`;
     guide.dataset.variant=variant;guide.querySelector('.ghostBase').src=asset;
     guide.querySelector('.ghostMouth').src=talking;guide.querySelector('.ghostGesture').src=talking;guide.querySelector('.ghostExpression').src=asset;
-    audioFailed=!window.GUIDO_ACTIVE_STAGE.audio;if(!audioFailed)audio.src=window.GUIDO_ACTIVE_STAGE.audio;else{audio.removeAttribute('src');audio.load();}
+    audio.src=window.GuidoVoice.url('story-'+window.GUIDO_ACTIVE_STAGE.id);
   }
   function unlockAnimation(){
     try{if(!context){context=new (window.AudioContext||window.webkitAudioContext)();source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=512;source.connect(analyser);analyser.connect(context.destination);}context.resume().catch(()=>{});}catch{}
@@ -42,22 +42,19 @@
       frame=requestAnimationFrame(animate);
     }frame=requestAnimationFrame(animate);
   }
-  function stopVoice(){audio.pause();audio.currentTime=0;synthSpeaking=false;guide.style.setProperty('--mouth-open',0);window.speechSynthesis?.cancel();voice.textContent='🔊 Ascolta Guido';}
-  function speak(){
-    if(audioFailed){if(!window.speechSynthesis)return;const utterance=new SpeechSynthesisUtterance(story.text);utterance.lang='it-IT';utterance.rate=.9;synthSpeaking=true;utterance.onend=()=>{synthSpeaking=false;storyFinished();};utterance.onerror=()=>{synthSpeaking=false;};window.speechSynthesis.speak(utterance);voice.textContent='■ Ferma Guido';return;}
-    audio.muted=false;audio.currentTime=0;voice.textContent='■ Ferma Guido';audio.play().catch(()=>{audioFailed=true;speak();});
-  }
+  function stopVoice(){window.GuidoVoice.stopAll();synthSpeaking=false;guide.style.setProperty('--mouth-open',0);voice.textContent='🔊 Ascolta Guido';}
+  function speak(){voice.textContent='■ Ferma Guido';window.GuidoVoice.play('story-'+window.GUIDO_ACTIVE_STAGE.id).catch(()=>{voice.textContent='Audio non disponibile · riprova';});}
   function storyFinished(){voice.textContent='🔊 Riascolta Guido';window.dispatchEvent(new CustomEvent('guido-story-finished',{detail:{stage:window.GUIDO_ACTIVE_STAGE.id}}));}
   window.addEventListener('guido-leave-camera',close);
-  audio.onplay=()=>{if(!audio.muted)voice.textContent='■ Ferma Guido';};audio.onended=storyFinished;
-  voice.onclick=()=>{if(!audio.paused||window.speechSynthesis?.speaking)stopVoice();else speak();};
+  audio.onplay=()=>{if(!audio.muted)voice.textContent='■ Ferma Guido';};audio.onended=()=>{if(window.GuidoVoice.currentKey==='story-'+window.GUIDO_ACTIVE_STAGE.id)storyFinished();};
+  voice.onclick=()=>{if(!audio.paused)stopVoice();else speak();};
   hud.addEventListener('guido-anchored',()=>{place.textContent='Sposta Guido';place.hidden=false;place.classList.add('placed');aim.hidden=true;aim.disabled=false;voice.hidden=false;if(!unlocked){unlocked=true;speak();}});
   function close(){generation++;opening=false;button.disabled=false;stopVoice();stream?.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;video.classList.remove('active');hud.classList.remove('active');document.body.classList.remove('ar-active');guide.hidden=true;hud.dispatchEvent(new Event('guido-close'));}
   $('closeAr').onclick=close;
   button.onclick=async()=>{
-    if(opening)return;opening=true;button.disabled=true;unlocked=false;const current=++generation;chooseAppearance();unlockAnimation();
+    if(opening)return;window.GuidoVoice.stopAll();opening=true;button.disabled=true;unlocked=false;const current=++generation;chooseAppearance();unlockAnimation();
     // Unlock prerecorded audio in the initial gesture; start the story once Guido is anchored.
-    if(!audioFailed){audio.muted=true;audio.play().then(()=>{if(!unlocked){audio.pause();audio.currentTime=0;audio.muted=false;}}).catch(()=>{audio.muted=false;});}
+    {audio.muted=true;audio.play().then(()=>{if(!unlocked){audio.pause();audio.currentTime=0;audio.muted=false;}}).catch(()=>{audio.muted=false;});}
     if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().catch(()=>{});
     try{
       if(!navigator.mediaDevices?.getUserMedia)throw Error('Fotocamera non disponibile');

@@ -1,0 +1,395 @@
+{
+  "voice": "it-IT-GiuseppeMultilingualNeural",
+  "rate": "-12%",
+  "pitch": "-18Hz",
+  "items": {
+    "intro": {
+      "file": "intro.mp3",
+      "sha256": "6c004aff5eabecc9c785ef7c84f50a64451859717b4260e66d38dce6d83008cb"
+    },
+    "card-1": {
+      "file": "card-1.mp3",
+      "sha256": "62cd25d880d4e840835519ba4cfcc3d39f12998833c5eba0bda9dda1e34d83af"
+    },
+    "card-2A": {
+      "file": "card-2A.mp3",
+      "sha256": "211ef8a1261a1f28aedc31d55f5ad5c358d3011d7891083b556bbb3f60f175f4"
+    },
+    "card-2B": {
+      "file": "card-2B.mp3",
+      "sha256": "cbee8b7a0279a628f33ead7b92c65fe0f2f84c0d66dfd666758f27a8854e69a9"
+    },
+    "card-3": {
+      "file": "card-3.mp3",
+      "sha256": "64845c58d0c7943694cf5883738371859e27f3a1363ace752fe00bd4ce223633"
+    },
+    "card-3A": {
+      "file": "card-3A.mp3",
+      "sha256": "1b80f2f9dc9ce1183fb8390f7dc36b4342e48aa5ba0804dcd27f658e81064874"
+    },
+    "card-4": {
+      "file": "card-4.mp3",
+      "sha256": "eb9f190b1576028f2f588b9679fe2d25e85bc6bcba33c71b9cecc5a548dc9f40"
+    },
+    "card-5": {
+      "file": "card-5.mp3",
+      "sha256": "9e14501e57e86fe782f91a5636d861290e01c011c8da2b8c21d8add849b13f66"
+    },
+    "card-6": {
+      "file": "card-6.mp3",
+      "sha256": "3fd99e0aa34d0c9784a2835419635f01a2c43d23163106350a5333d206860033"
+    },
+    "card-7A": {
+      "file": "card-7A.mp3",
+      "sha256": "56f3227fbca6a510ef666402cc9260daa2be3239d60bb7e23ce96abae8f0b00f"
+    },
+    "card-7B": {
+      "file": "card-7B.mp3",
+      "sha256": "861d9da3db0a6a0e68c9d900bbfef380b8a9e8a923078917c848182faf72da72"
+    },
+    "card-8": {
+      "file": "card-8.mp3",
+      "sha256": "d97ad8f2f730628fa107cec933d05b1f323ed03e2b07ecf4f367b8a6f7bd3e2f"
+    },
+    "card-8B": {
+      "file": "card-8B.mp3",
+      "sha256": "ca63faa0efa77a0a7dd1055b119a3f75192817b2608a3825dff523908cbf8252"
+    },
+    "card-9": {
+      "file": "card-9.mp3",
+      "sha256": "d019e48d410972fe3d85f840126ad26d9210b9d2c6709299349b6457b97c9ce2"
+    },
+    "card-10": {
+      "file": "card-10.mp3",
+      "sha256": "c52df4aebfd7c33dad93020c501ed54ba9e000cd1f3b03e7ad3f8306f6a0a387"
+    },
+    "card-11": {
+      "file": "card-11.mp3",
+      "sha256": "e9fc281a7eaf207db3ceee4c0c68d21301d2d223fa175407e84a1f6cb1fbaf11"
+    },
+    "card-12": {
+      "file": "card-12.mp3",
+      "sha256": "d87bb2d057adec78884c8f027d694ddf6c4c22fa598e586da2c90d5fa34f8d25"
+    },
+    "card-12B": {
+      "file": "card-12B.mp3",
+      "sha256": "71504abbc09cb7c628ca7c3533f6e789a02d835e0cd0c9ca926355186d4556f7"
+    },
+    "card-13": {
+      "file": "card-13.mp3",
+      "sha256": "80ff1939cd9b0413e9992dc40747a9a6bed9dbaea72a40e5d2413ce04a22d3a8"
+    },
+    "card-14": {
+      "file": "card-14.mp3",
+      "sha256": "bf699c530645bc91d6367083892bf7958952bebee574e27d42703b94a0f7d6da"
+    },
+    "card-15": {
+      "file": "card-15.mp3",
+      "sha256": "4598bc744596df6471992a1ec1e95c07a58468c004a3fb90b569610ef668a0b7"
+    },
+    "card-16": {
+      "file": "card-16.mp3",
+      "sha256": "d7b3d0ffa9f2438a18e492e0f5acc17a3bf3e321fe7f64c31592f0e58caec333"
+    },
+    "card-17": {
+      "file": "card-17.mp3",
+      "sha256": "daaa6d235d61afbabb2ca955ae081d123a2b892a907bcaacf1698def6fc7c4e4"
+    },
+    "card-18": {
+      "file": "card-18.mp3",
+      "sha256": "487855ccc6be7a810adee3caf4fdfe73c6c55f30d398155967289e8384c17b07"
+    },
+    "card-19": {
+      "file": "card-19.mp3",
+      "sha256": "473d2c042d0158c1232eec21b80acf0451ef25f016c9592e83316baacec08c56"
+    },
+    "card-20": {
+      "file": "card-20.mp3",
+      "sha256": "12d016b2b61810864d601c9d8278a2002ce0f30e69c9025c2e5ab78ded2dd2af"
+    },
+    "card-21": {
+      "file": "card-21.mp3",
+      "sha256": "017824423463cbe9ac073a990bc52fbccbaa34651572ca3601d263cfe24781ed"
+    },
+    "card-22": {
+      "file": "card-22.mp3",
+      "sha256": "60c35549792511957e5269bd07709c1df3a2e018beca5f93a0690edfa455db31"
+    },
+    "card-22A": {
+      "file": "card-22A.mp3",
+      "sha256": "2eef0c2e2b91c99e42cad3a45514208d1467f0b60691cf2504d866f93ca0b623"
+    },
+    "card-23": {
+      "file": "card-23.mp3",
+      "sha256": "c194b15402f9f6a76bf631047e9db8965bb3b28cb921a7e15f318dee3f0f8e89"
+    },
+    "card-24": {
+      "file": "card-24.mp3",
+      "sha256": "ccfff6de66aff673e8f21cbdc228b46f309299419e057dc7de4650d9e431b366"
+    },
+    "card-24B": {
+      "file": "card-24B.mp3",
+      "sha256": "04f37c709a00f5545f2d5471141b6038ab8f01e29e7f8aabbb0b35831ecabdea"
+    },
+    "card-25": {
+      "file": "card-25.mp3",
+      "sha256": "38e5f9c47e8fbdd1523f7abfd145143ebaaf850e05c1242de19f80b89d226cd2"
+    },
+    "story-1": {
+      "file": "story-1.mp3",
+      "sha256": "b2dec63ded6bad110c5619e1fd445d57b95012e24602e363a9957d6312ac2f61"
+    },
+    "quiz-1": {
+      "file": "quiz-1.mp3",
+      "sha256": "7e09cc10cd04593b559ff47ed84d2434a6ac9ac5578ee3d1ab3700d335e3b990"
+    },
+    "story-2A": {
+      "file": "story-2A.mp3",
+      "sha256": "97142a54622d5f3825d40e27469cc0e2534af23d49e42489223cd4d3c1a57637"
+    },
+    "quiz-2A": {
+      "file": "quiz-2A.mp3",
+      "sha256": "c673505982267cef18d2ce984e0f1a9bd809cfb0e9397fcb155ebdb6c88b8d46"
+    },
+    "story-2B": {
+      "file": "story-2B.mp3",
+      "sha256": "d98af7556fa520516e1449b52e53a83b8eca4608b2fb15ba30a93fad9e59c9c9"
+    },
+    "quiz-2B": {
+      "file": "quiz-2B.mp3",
+      "sha256": "f8fa26d16cd35b2951f3e7355601f28ddd068e2b987e6d487a0382c4e669f143"
+    },
+    "story-3": {
+      "file": "story-3.mp3",
+      "sha256": "40cb45aadffe974dbef484f2c463d8002c729904e5a26bb1ee7083778c5b8ae8"
+    },
+    "quiz-3": {
+      "file": "quiz-3.mp3",
+      "sha256": "aa1582deb9dbb02d3c8c7f0e5121f1e5d39221596b058e89dac216ea92688943"
+    },
+    "story-3A": {
+      "file": "story-3A.mp3",
+      "sha256": "f9a6ce81ac4b4f87c53187e633337536a87cb54561c54aea5aa8949fd7cd0ad1"
+    },
+    "quiz-3A": {
+      "file": "quiz-3A.mp3",
+      "sha256": "a04f891896649fcea7178a16c39f7c9d098c5769e759d389cb064e3f040710c3"
+    },
+    "quiz-4": {
+      "file": "quiz-4.mp3",
+      "sha256": "2a06c33974b046c8aef20f5b7b867d44d4fdba46a56d730783d7c3712fe8054d"
+    },
+    "story-5": {
+      "file": "story-5.mp3",
+      "sha256": "071541a7c1298fcc835ffe32a94119665e324d4a06bfdd0c25440a8d7e37e797"
+    },
+    "quiz-5": {
+      "file": "quiz-5.mp3",
+      "sha256": "47d943ce30767dfa58e36e2cc647d834a2c85aefae2bb5eae777727ae24ad441"
+    },
+    "story-6": {
+      "file": "story-6.mp3",
+      "sha256": "5b8061e5d999906c198031ce05173c724ff2ba864f9708c8b0b46cea445a043d"
+    },
+    "quiz-6": {
+      "file": "quiz-6.mp3",
+      "sha256": "846c7deaa7121ef71af7014733c5e096bc84f6e85ef6bdb77dab6fc2734e9a78"
+    },
+    "story-7A": {
+      "file": "story-7A.mp3",
+      "sha256": "58d8339bd0104d32d81b523b66a13a1cad6f0e8c15377d874b2b257376684255"
+    },
+    "quiz-7A": {
+      "file": "quiz-7A.mp3",
+      "sha256": "cd5851278e71f0907f31798f7b62ff1d74ebc993872871896c73a6ef1f099fb6"
+    },
+    "story-7B": {
+      "file": "story-7B.mp3",
+      "sha256": "32dc30e2fb029d3c64a84f3cd4bab008fceedae931345e676170bf7cae1cd1b6"
+    },
+    "quiz-7B": {
+      "file": "quiz-7B.mp3",
+      "sha256": "0cd4e2ce130a84269632422c949cb820adba6a2d6efc23ce4b65e757cf26e479"
+    },
+    "story-8": {
+      "file": "story-8.mp3",
+      "sha256": "bab45eb110ccea19995074f45c65a4c8dbc29343b104c1de5b1b0dd48bf093e5"
+    },
+    "quiz-8": {
+      "file": "quiz-8.mp3",
+      "sha256": "73acda77be53b863d893d2dc4af521f4e6deb4fed7de6d9539acd4074260e12b"
+    },
+    "story-8B": {
+      "file": "story-8B.mp3",
+      "sha256": "beec3d52c7a3be67b5eb67a66739d051b9a939105fa072d34db9121fddeb73fc"
+    },
+    "quiz-8B": {
+      "file": "quiz-8B.mp3",
+      "sha256": "4a7bab0775183fee034cb2a641a463d9eddf629699e54ef5f0b84f8d6dbc0a24"
+    },
+    "story-9": {
+      "file": "story-9.mp3",
+      "sha256": "f0f72fcb7dcb74f6768e1d4fd5d7ea276705a932050f111a332d0bbcc904494c"
+    },
+    "quiz-9": {
+      "file": "quiz-9.mp3",
+      "sha256": "53fa36b7b99f2b88f6284ccf7d3217550c71875a9cb1e00ff56bb5b0c5952954"
+    },
+    "story-10": {
+      "file": "story-10.mp3",
+      "sha256": "66c4df95d9e70f87be58608270038eb20c8c126329004844d5dd9834c6669822"
+    },
+    "quiz-10": {
+      "file": "quiz-10.mp3",
+      "sha256": "1f5ef7228f1eadb1b64a4e890892493e9883072d51aeccae18e5f2669287b784"
+    },
+    "story-11": {
+      "file": "story-11.mp3",
+      "sha256": "76c39939740f289c5ab386ec4c1f11408cf70e1e42b6e9e00fdfce83e83b5ede"
+    },
+    "quiz-11": {
+      "file": "quiz-11.mp3",
+      "sha256": "db1e829ace557c50b7d4d9d07a4c6859f4d63390601250692aac4ffc9d430bdf"
+    },
+    "story-12": {
+      "file": "story-12.mp3",
+      "sha256": "77e5c7f5ab0b747ce4d5ed520fdc7f9eb93fe1ef21b949b905a138513e962991"
+    },
+    "quiz-12": {
+      "file": "quiz-12.mp3",
+      "sha256": "32985a3149bcc1e9cc2bebe3062234e878c7ece86afe8daf20597ad106b67f44"
+    },
+    "story-12B": {
+      "file": "story-12B.mp3",
+      "sha256": "fd82a9fb05eb0c204357c0a237f7189578c2e3029e556a65afc00e7c3ac205bb"
+    },
+    "quiz-12B": {
+      "file": "quiz-12B.mp3",
+      "sha256": "f6600ee64d3194ef104cc674ee7d317d6f9f36a935dec0d2e11629c1ccc0425e"
+    },
+    "story-13": {
+      "file": "story-13.mp3",
+      "sha256": "86bb109a583d9c6b7e56888dc354b951963ef668cbfe1b90690850781fd3ecb0"
+    },
+    "quiz-13": {
+      "file": "quiz-13.mp3",
+      "sha256": "1a830e6e19d4c8f9c8cd585165af4a38c3581e5a0d86829feaea41e0600a0e21"
+    },
+    "story-14": {
+      "file": "story-14.mp3",
+      "sha256": "195a267288b7727c70e775525ccc8024314de32ac1d4914374c869da26f5ab59"
+    },
+    "quiz-14": {
+      "file": "quiz-14.mp3",
+      "sha256": "e0d4002b9f64bd195bfd0e785731b918a9dfa1ddc5bcd888ec45bd57e87e2adf"
+    },
+    "story-15": {
+      "file": "story-15.mp3",
+      "sha256": "b843f2946be83afc34281931f133e3694e094f2d828d4fa6c077e3cdae5fb803"
+    },
+    "quiz-15": {
+      "file": "quiz-15.mp3",
+      "sha256": "d79a6b80afdde71746ab34a67b5aaaf5a45e43c1c8a3f9cc2e09399c8b455219"
+    },
+    "story-16": {
+      "file": "story-16.mp3",
+      "sha256": "141393371673da32286f755d1ae390804fb352b4299bec2b87510cc0105f72a3"
+    },
+    "quiz-16": {
+      "file": "quiz-16.mp3",
+      "sha256": "16d08f6d574c8870d4fd01690e54b17e26f83b12db30758ff3385166387e904e"
+    },
+    "story-17": {
+      "file": "story-17.mp3",
+      "sha256": "9a5ea5803f25155ccac97a975e0da6203d12501f0f03cac943a660ecb1bc77ec"
+    },
+    "quiz-17": {
+      "file": "quiz-17.mp3",
+      "sha256": "dfd54e26c304ecda551841483d40b355fbf1b0ccecada91f96f23275bb34f2c7"
+    },
+    "story-18": {
+      "file": "story-18.mp3",
+      "sha256": "8adefde3437e7d7955e3d4d9e6fb3b20ce5e0fc2a67850433d83ce6b682a0747"
+    },
+    "quiz-18": {
+      "file": "quiz-18.mp3",
+      "sha256": "c68374086aa9b6ed2bb59496cb8f0b3bff1b2f8fb258325e1ce207cfaa64526d"
+    },
+    "story-19": {
+      "file": "story-19.mp3",
+      "sha256": "fc52aa071a14a8506fc0a25a5a3b741bb4bc48b8dca46d4e5f1a5b51bfeb2061"
+    },
+    "quiz-19": {
+      "file": "quiz-19.mp3",
+      "sha256": "61fd648fc47ed16f2ca9ffea189a542be2a9a02639cd8143140896fb149a0205"
+    },
+    "story-20": {
+      "file": "story-20.mp3",
+      "sha256": "b4e35b0200437672cecc9960fa42aa59f6592d04705d157726b287518f49d98d"
+    },
+    "quiz-20": {
+      "file": "quiz-20.mp3",
+      "sha256": "e900165d0c2230e793f6a8101a3f8d9da038356e9cceb75b48c2a6f31db5b3e5"
+    },
+    "story-21": {
+      "file": "story-21.mp3",
+      "sha256": "324f0576533bce3df57e5db224e2efb341c01ba0bac36c5fb6dbf627354575c9"
+    },
+    "quiz-21": {
+      "file": "quiz-21.mp3",
+      "sha256": "f8c37999908e6cb4c8be16347dcfe5f3c732051128d65cab8ad1f12cc8ed0845"
+    },
+    "story-22": {
+      "file": "story-22.mp3",
+      "sha256": "398d07971084bacee0ecba7f2f46e862ef40a003821baf14dc67967adcb09df5"
+    },
+    "quiz-22": {
+      "file": "quiz-22.mp3",
+      "sha256": "8c88fbe6b42b43e588ff8d38a20562bc4824be130884ba0ca799e8f5e950d338"
+    },
+    "story-22A": {
+      "file": "story-22A.mp3",
+      "sha256": "e5bbb9f8cda544fa3ef45e36a0292f5c0333b918ed08fb9efec73e1bc2a19e61"
+    },
+    "quiz-22A": {
+      "file": "quiz-22A.mp3",
+      "sha256": "e1cefa92ba904cfb0936fcb442798ea65be558b4c1e4c3283bbf1eb524d923fb"
+    },
+    "story-23": {
+      "file": "story-23.mp3",
+      "sha256": "da3e9eba687a0ec29121ccc49d578867256dbcc1150ed270a7b693eb97a665f1"
+    },
+    "quiz-23": {
+      "file": "quiz-23.mp3",
+      "sha256": "450deb9f86639b01a35f2454d71c0d51111e0f039d7ae11fe26d893e9b9b8462"
+    },
+    "story-24": {
+      "file": "story-24.mp3",
+      "sha256": "2d8d64557f4187247cc0d30ea700ed9e4899c04a73b23bc241383a931bde2ca9"
+    },
+    "quiz-24": {
+      "file": "quiz-24.mp3",
+      "sha256": "e915c833ac81e49054968cdb2c141a1704ec31efbdefd00eceb4bbb16a254e08"
+    },
+    "story-24B": {
+      "file": "story-24B.mp3",
+      "sha256": "83ee94dc244fac03b720c987a0ee1f291236df4bc7ce4098efd70329e57ae8ee"
+    },
+    "quiz-24B": {
+      "file": "quiz-24B.mp3",
+      "sha256": "4842a5757efb27b997abdfeeda4d815fad6885eb526911551348dc69182e78dc"
+    },
+    "story-25": {
+      "file": "story-25.mp3",
+      "sha256": "56a8b37d010e283c613eb1fc1c4cc526141aba8351920c7802ff0fb1715ad38e"
+    },
+    "quiz-25": {
+      "file": "quiz-25.mp3",
+      "sha256": "0ae7cd2ed2589cabc2c3e5ea5c00731801f3e7e4dd7fe4f027096d9572914d9d"
+    },
+    "story-4": {
+      "file": "../guido-narration.mp3",
+      "original": true
+    }
+  }
+}
